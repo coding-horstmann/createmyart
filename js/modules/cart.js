@@ -12,41 +12,75 @@ export const CartModule = {
     
     // Initialisierung
     init() {
-        this.loadCart();
-        this.setupEventListeners();
-        this.updateCartCount();
+        console.log('CartModule.init() wurde aufgerufen');
+        try {
+            this.loadCart();
+            this.setupEventListeners();
+            this.updateCartCount();
+            console.log('CartModule vollständig initialisiert');
+        } catch (error) {
+            console.error('Fehler bei der Initialisierung des CartModule:', error);
+        }
     },
     
     // Event-Listener einrichten
     setupEventListeners() {
         // Warenkorb-Icon Klick-Event
-        document.getElementById('cart-icon').addEventListener('click', this.toggleCartSidebar.bind(this));
+        const cartIcon = document.getElementById('cart-icon');
+        if (cartIcon) {
+            cartIcon.addEventListener('click', this.toggleCartSidebar.bind(this));
+        } else {
+            console.warn('Element #cart-icon nicht gefunden');
+        }
         
         // Schließen-Button Event
-        document.querySelector('.cart-sidebar .close-sidebar').addEventListener('click', this.hideCartSidebar.bind(this));
+        const closeButton = document.querySelector('.cart-sidebar .close-sidebar');
+        if (closeButton) {
+            closeButton.addEventListener('click', this.hideCartSidebar.bind(this));
+        } else {
+            console.warn('Element .cart-sidebar .close-sidebar nicht gefunden');
+        }
         
         // Hintergrund-Klick Event
-        document.getElementById('cart-sidebar-backdrop').addEventListener('click', this.hideCartSidebar.bind(this));
+        const backdrop = document.getElementById('cart-sidebar-backdrop');
+        if (backdrop) {
+            backdrop.addEventListener('click', this.hideCartSidebar.bind(this));
+        } else {
+            console.warn('Element #cart-sidebar-backdrop nicht gefunden');
+        }
         
         // Checkout-Button Event
-        document.getElementById('checkout-btn').addEventListener('click', () => {
-            this.hideCartSidebar();
-            
-            // Prüfen, ob der Warenkorb leer ist
-            if (this.cart.length === 0) {
-                UIModule.showCustomAlert('Hinweis', 'Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
-                return;
-            }
-            
-            // Checkout-Modal anzeigen
-            // Diese Funktion ist in checkout.js definiert
-            if (window.CheckoutModule) {
-                window.CheckoutModule.showCheckoutModal(this.cart);
-            } else {
-                console.error('CheckoutModule nicht gefunden. Wurde checkout.js geladen?');
-                UIModule.showCustomAlert('Fehler', 'Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
-            }
-        });
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', () => {
+                this.hideCartSidebar();
+                
+                // Prüfen, ob der Warenkorb leer ist
+                if (this.cart.length === 0) {
+                    if (window.UIModule) {
+                        window.UIModule.showCustomAlert('Hinweis', 'Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
+                    } else {
+                        alert('Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
+                    }
+                    return;
+                }
+                
+                // Checkout-Modal anzeigen
+                // Diese Funktion ist in checkout.js definiert
+                if (window.CheckoutModule) {
+                    window.CheckoutModule.showCheckoutModal(this.cart);
+                } else {
+                    console.error('CheckoutModule nicht gefunden. Wurde checkout.js geladen?');
+                    if (window.UIModule) {
+                        window.UIModule.showCustomAlert('Fehler', 'Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
+                    } else {
+                        alert('Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
+                    }
+                }
+            });
+        } else {
+            console.warn('Element #checkout-btn nicht gefunden');
+        }
     },
     
     // Warenkorb-Sidebar anzeigen/ausblenden
@@ -70,7 +104,11 @@ export const CartModule = {
     // Aktualisiert die Warenkorb-Anzeige
     updateCartCount() {
         const cartCount = document.getElementById('cart-count');
-        cartCount.textContent = this.cart.length;
+        if (cartCount) {
+            cartCount.textContent = this.cart.length;
+        } else {
+            console.warn('Element #cart-count nicht gefunden');
+        }
     },
     
     // Lädt den Warenkorb aus dem lokalen Speicher
@@ -82,8 +120,22 @@ export const CartModule = {
     },
     
     // Speichert den Warenkorb im lokalen Speicher
-    saveCart() {
-        localStorage.setItem('cart', JSON.stringify(this.cart));
+    saveCart(cart) {
+        try {
+            // Wenn ein Warenkorb-Objekt übergeben wurde, dieses verwenden
+            if (cart) {
+                this.cart = cart;
+            }
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            
+            // Event auslösen für andere Module
+            const event = new CustomEvent('cartUpdated', { detail: { cart: this.cart } });
+            window.dispatchEvent(event);
+            
+            console.log('Warenkorb gespeichert:', this.cart);
+        } catch (error) {
+            console.error('Fehler beim Speichern des Warenkorbs:', error);
+        }
     },
     
     /**
@@ -161,3 +213,25 @@ export const CartModule = {
 
 // Stelle das Modul global zur Verfügung für bestehenden Code
 window.CartModule = CartModule; 
+
+// Initialisiere das Modul automatisch
+function initCartModule() {
+    // Überprüfung, ob alle notwendigen DOM-Elemente vorhanden sind
+    if (document.getElementById('cart-icon')) {
+        console.log('CartModule wird initialisiert...');
+        CartModule.init();
+        console.log('CartModule erfolgreich initialisiert');
+    } else {
+        console.warn('Warenkorb-Elemente nicht gefunden, verzögere Initialisierung...');
+        // Verzögern und erneut versuchen
+        setTimeout(initCartModule, 100);
+    }
+}
+
+// Führe die Initialisierung aus, wenn das DOM geladen ist
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartModule);
+} else {
+    // DOM ist bereits geladen
+    initCartModule();
+} 
