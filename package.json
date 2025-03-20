@@ -1,0 +1,17 @@
+{
+  "name": "createmyart",
+  "version": "1.0.0",
+  "description": "KI-generierte Kunstwerke",
+  "main": "vercel.js",
+  "engines": {
+    "node": ">=14.x"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "uuid": "^8.3.2"
+  },
+  "scripts": {
+    "start": "node vercel.js",
+    "dev": "vercel dev"
+  }
+} 

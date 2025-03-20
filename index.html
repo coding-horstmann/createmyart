@@ -12,6 +12,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <!-- Umgebungsvariablen für Fallback -->
+    <script>
+        // Globales ENV-Objekt
+        window.ENV = {
+            // Diese Werte werden nur verwendet, wenn die API-Endpunkte fehlschlagen
+            // In einer produktiven Umgebung sollten diese Werte leer sein
+            FIREBASE_API_KEY: "AIzaSyCQczPAeGPqgPvXKGdpxglg1BQL2npQgUI",
+            FIREBASE_AUTH_DOMAIN: "createmyart-3eae0.firebaseapp.com",
+            FIREBASE_PROJECT_ID: "createmyart-3eae0",
+            FIREBASE_STORAGE_BUCKET: "createmyart-3eae0.firebasestorage.app",
+            FIREBASE_MESSAGING_SENDER_ID: "629278213479",
+            FIREBASE_APP_ID: "1:629278213479:web:ef051c68741ccedb989bc2",
+            FIREBASE_MEASUREMENT_ID: "G-2T9NBYBQBL",
+            ADMIN_EMAIL: "kontakt@create-my-art.de",
+            PAYPAL_CLIENT_ID: "AZ73QnHn7iwfFLtnJHV7PnZv9_N7XRtvscFEEVJ-xHpcRZDyvsczcMWBnge_XAEMQMLMD5NZtRISg-jT",
+            RUNWARE_API_KEY: "HM7v3Guqmm92rYWOY2QbTZlipWfbNnBR"
+        };
+    </script>
+    
     <!-- PayPal JavaScript SDK - dynamisch geladen -->
     <script>
         // PayPal Script dynamisch mit der Client-ID laden

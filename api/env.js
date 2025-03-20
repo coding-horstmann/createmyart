@@ -3,7 +3,7 @@
  * Stellt ausgewählte Umgebungsvariablen für das Frontend bereit
  */
 
-export default function handler(req, res) {
+function handler(req, res) {
   // CORS-Header für Cross-Origin-Anfragen
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -43,4 +43,8 @@ export default function handler(req, res) {
 
   // HTTP 200 OK mit den Umgebungsvariablen
   return res.status(200).json(clientEnvVars);
-} 
+}
+
+module.exports = {
+  default: handler
+}; 

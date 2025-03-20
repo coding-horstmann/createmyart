@@ -4,7 +4,12 @@
  * damit der API-Key nicht im Frontend verfügbar sein muss
  */
 
-export default async function handler(req, res) {
+// Node-fetch importieren für Node.js-Umgebungen, die fetch nicht unterstützen
+const fetch = require('node-fetch');
+// UUID für ältere Node-Versionen
+const { v4: uuidv4 } = require('uuid');
+
+async function handler(req, res) {
   // CORS-Header für Cross-Origin-Anfragen
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -45,7 +50,7 @@ export default async function handler(req, res) {
       body: JSON.stringify([
         {
           taskType: "imageInference",
-          taskUUID: crypto.randomUUID(),
+          taskUUID: uuidv4(),
           positivePrompt: prompt,
           width: 512,
           height: 512,
@@ -64,4 +69,8 @@ export default async function handler(req, res) {
     console.error('Error generating image:', error);
     return res.status(500).json({ error: 'Error generating image', message: error.message });
   }
-} 
+}
+
+module.exports = {
+  default: handler
+}; 

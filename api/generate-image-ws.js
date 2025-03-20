@@ -3,7 +3,10 @@
  * Dieser Endpunkt dient als Proxy für die Runware WebSocket-API
  */
 
-export default async function handler(req, res) {
+// Node-fetch importieren für Node.js-Umgebungen, die fetch nicht unterstützen
+const fetch = require('node-fetch');
+
+async function handler(req, res) {
   // CORS-Header für Cross-Origin-Anfragen
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -76,4 +79,8 @@ function generateUUID() {
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
-} 
+}
+
+module.exports = {
+  default: handler
+}; 

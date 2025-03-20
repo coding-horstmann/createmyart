@@ -18,8 +18,28 @@ async function loadEnvironmentVariables() {
 
     // Versuchen, Umgebungsvariablen vom Server zu laden
     try {
-      const apiUrl = window.location.hostname.includes('localhost') ? 'http://localhost:3000/api/env' : '/api/env';
-      const response = await fetch(apiUrl);
+      // Versuche zuerst direkte Umgebungsvariablen zu nutzen (falls verfügbar)
+      if (window.ENV && window.ENV.FIREBASE_API_KEY) {
+        console.log('Verwende direkte Umgebungsvariablen');
+        envVars = window.ENV;
+        isLoaded = true;
+        return envVars;
+      }
+
+      // Sonst vom API-Endpunkt laden
+      console.log('Lade Umgebungsvariablen vom API-Endpunkt...');
+      const apiUrl = window.location.hostname.includes('localhost') ? 
+        'http://localhost:3000/api/env' : 
+        '/api/env';
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      });
+      
       if (response.ok) {
         const data = await response.json();
         envVars = data;

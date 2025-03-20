@@ -31,15 +31,26 @@ export const RunwareAPI = {
     // Bildgenerierung über Server-Endpunkt
     async generateImage(prompt) {
         try {
+            // Versuche direkt die Runware API zu nutzen (für Entwicklung/Tests)
+            if (window.ENV && window.ENV.RUNWARE_API_KEY) {
+                console.log('Verwende direkte Runware API mit Key aus ENV');
+                return this.generateImageDirect(prompt, window.ENV.RUNWARE_API_KEY);
+            }
+
+            // Ansonsten über den Server-Proxy
             // Pfad zum API-Endpunkt basierend auf der Umgebung
             const apiUrl = window.location.hostname.includes('localhost') ? 
-                'http://localhost:3000/api/generate-image' : '/api/generate-image';
+                'http://localhost:3000/api/generate-image' : 
+                '/api/generate-image';
+            
+            console.log('Sende Bildgenerierungsanfrage an Server-Proxy:', apiUrl);
             
             // Anfrage an den Server-Endpunkt statt direkt an Runware
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache'
                 },
                 body: JSON.stringify({ prompt })
             });
@@ -83,6 +94,48 @@ export const RunwareAPI = {
             };
         } catch (error) {
             throw new Error(`Fehler bei der Fallback-Bildgenerierung: ${error.message}`);
+        }
+    },
+
+    // Direkte Bildgenerierung mit API-Key
+    async generateImageDirect(prompt, apiKey) {
+        try {
+            console.log('Generiere Bild direkt mit Runware API');
+            const response = await fetch('https://api.runware.ai/v1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify([
+                    {
+                        taskType: "imageInference",
+                        taskUUID: crypto.randomUUID(),
+                        positivePrompt: prompt,
+                        width: 512,
+                        height: 512,
+                        model: "civitai:102438@133677",
+                        numberResults: 1
+                    }
+                ])
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Fehler bei direkter API-Anfrage: ${response.status} ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.data) {
+                return data.data[0];
+            } else if (data.errors) {
+                throw new Error(data.errors[0].message);
+            } else {
+                throw new Error("Ungültige Antwort von der direkten API");
+            }
+        } catch (error) {
+            console.error('Fehler bei direkter Bildgenerierung:', error);
+            throw error;
         }
     }
 }; 
