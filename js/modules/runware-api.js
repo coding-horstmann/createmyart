@@ -101,7 +101,7 @@ export const RunwareAPI = {
         }
     },
 
-    // Direkte Bildgenerierung mit API-Key
+    // Direkte Bildgenerierung mit API-Key gemäß Runware-Dokumentation
     async generateImageDirect(prompt, apiKey) {
         try {
             console.log('Generiere Bild direkt mit Runware API');
@@ -109,26 +109,37 @@ export const RunwareAPI = {
             // UUID für die Anfrage generieren
             const taskUUID = this.generateUUID();
             
+            // Korrekter Aufbau der Anfrage gemäß Dokumentation
+            const payload = [
+                {
+                    taskType: "authentication",
+                    apiKey: apiKey
+                },
+                {
+                    taskType: "imageInference",
+                    taskUUID: taskUUID,
+                    positivePrompt: prompt,
+                    width: 512,
+                    height: 512,
+                    model: "civitai:102438@133677", // Standard Stable Diffusion-Modell
+                    numberResults: 1
+                }
+            ];
+            
+            console.log('Sende Anfrage an Runware API mit Payload:', JSON.stringify(payload));
+            
             const response = await fetch('https://api.runware.ai/v1', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
                 },
-                body: JSON.stringify([
-                    {
-                        taskType: "imageInference",
-                        taskUUID: taskUUID,
-                        positivePrompt: prompt,
-                        width: 512,
-                        height: 512,
-                        model: "civitai:102438@133677",
-                        numberResults: 1
-                    }
-                ])
+                body: JSON.stringify(payload)
             });
             
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Fehler-Antwort von Runware API:', errorText);
                 throw new Error(`API-Anfragefehler: ${response.status} ${response.statusText}`);
             }
             
@@ -138,8 +149,19 @@ export const RunwareAPI = {
             if (data.data && data.data.length > 0) {
                 const imageData = data.data[0];
                 console.log('Bild erfolgreich generiert:', imageData);
-                return imageData;
+                
+                // Korrektes Format für unsere Anwendung
+                return {
+                    taskType: "imageInference",
+                    taskUUID: imageData.taskUUID || taskUUID,
+                    url: imageData.imageURL, // Runware gibt imageURL zurück
+                    model: imageData.model || "runware-model",
+                    metadata: {
+                        prompt: prompt
+                    }
+                };
             } else if (data.errors && data.errors.length > 0) {
+                console.error('Runware API Fehler:', data.errors);
                 throw new Error(data.errors[0].message);
             } else {
                 console.error('Keine Bilddaten in der API-Antwort:', data);
@@ -148,6 +170,92 @@ export const RunwareAPI = {
         } catch (error) {
             console.error('Fehler bei direkter Bildgenerierung:', error);
             // Bei Fehlern zum Fallback wechseln
+            return this.generateImageFallback(prompt);
+        }
+    },
+    
+    // Alternative direkte Bildgenerierung mit WebSocket
+    async generateImageWebSocket(prompt, apiKey) {
+        try {
+            console.log('Generiere Bild mit Runware WebSocket API');
+            const ws = await this.connectWebSocket();
+            
+            // UUID für die Anfrage generieren
+            const taskUUID = this.generateUUID();
+            
+            return new Promise((resolve, reject) => {
+                // Timeout nach 30 Sekunden
+                const timeout = setTimeout(() => {
+                    ws.close();
+                    reject(new Error('Timeout bei der WebSocket-Verbindung'));
+                }, 30000);
+                
+                // Nachrichtenverarbeitung
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        console.log('WebSocket Antwort:', data);
+                        
+                        if (data.data && data.data.length > 0) {
+                            // Authentifizierungsnachricht überspringen
+                            if (data.data[0].taskType === 'authentication') {
+                                return;
+                            }
+                            
+                            // Bilddaten verarbeiten
+                            const imageData = data.data[0];
+                            clearTimeout(timeout);
+                            ws.close();
+                            
+                            resolve({
+                                taskType: "imageInference",
+                                taskUUID: imageData.taskUUID || taskUUID,
+                                url: imageData.imageURL,
+                                model: "runware-model",
+                                metadata: {
+                                    prompt: prompt
+                                }
+                            });
+                        } else if (data.errors && data.errors.length > 0) {
+                            clearTimeout(timeout);
+                            ws.close();
+                            reject(new Error(data.errors[0].message));
+                        }
+                    } catch (error) {
+                        clearTimeout(timeout);
+                        ws.close();
+                        reject(error);
+                    }
+                };
+                
+                // Fehlerbehandlung
+                ws.onerror = (error) => {
+                    clearTimeout(timeout);
+                    ws.close();
+                    reject(error);
+                };
+                
+                // Verbindungsschließung
+                ws.onclose = () => {
+                    clearTimeout(timeout);
+                    reject(new Error('WebSocket-Verbindung geschlossen'));
+                };
+                
+                // Anfrage senden
+                ws.send(JSON.stringify([
+                    {
+                        taskType: "imageInference",
+                        taskUUID: taskUUID,
+                        positivePrompt: prompt,
+                        width: 512,
+                        height: 512,
+                        model: "civitai:102438@133677",
+                        numberResults: 1
+                    }
+                ]));
+            });
+        } catch (error) {
+            console.error('Fehler bei WebSocket-Bildgenerierung:', error);
             return this.generateImageFallback(prompt);
         }
     },
