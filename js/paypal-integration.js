@@ -3,7 +3,7 @@
  * Diese Datei handhabt die PayPal-Zahlungsabwicklung
  */
 
-import { getEnv } from './env-loader.js';
+import { getEnv, loadEnvironmentVariables } from './env-loader.js';
 
 /**
  * PayPal-Integrationsklasse
@@ -27,11 +27,15 @@ class PayPalIntegration {
    */
   async initialize() {
     try {
+      // Zuerst Umgebungsvariablen vollständig laden
+      await loadEnvironmentVariables();
+      
       // PayPal Client ID aus den Umgebungsvariablen laden
       this.clientId = getEnv('PAYPAL_CLIENT_ID');
       
-      if (!this.clientId || this.clientId === 'DEINE_PAYPAL_SANDBOX_CLIENT_ID') {
-        console.error('PayPal Client ID ist nicht konfiguriert');
+      if (!this.clientId || this.clientId.trim() === '') {
+        console.error('PayPal Client ID ist nicht konfiguriert oder leer');
+        this.disablePayPalPaymentOption();
         return false;
       }
 
@@ -43,7 +47,42 @@ class PayPalIntegration {
       return true;
     } catch (error) {
       console.error('Fehler bei der Initialisierung der PayPal-Integration:', error);
+      this.disablePayPalPaymentOption();
       return false;
+    }
+  }
+
+  /**
+   * Deaktiviert die PayPal-Zahlungsoption im Checkout
+   */
+  disablePayPalPaymentOption() {
+    try {
+      const paypalRadio = document.getElementById('payment-paypal');
+      if (paypalRadio) {
+        paypalRadio.disabled = true;
+        
+        // Die übergeordnete Zahlungsoption visuell als deaktiviert markieren
+        const paymentOption = paypalRadio.closest('.payment-option');
+        if (paymentOption) {
+          paymentOption.classList.add('disabled');
+          
+          // Label anpassen, um auf die Deaktivierung hinzuweisen
+          const label = paymentOption.querySelector('label');
+          if (label) {
+            label.innerHTML = label.innerHTML + ' <span class="unavailable-notice">(Derzeit nicht verfügbar)</span>';
+          }
+        }
+      }
+      
+      // PayPal-Button-Container mit einer Meldung versehen
+      const paypalContainer = document.getElementById('paypal-button-container');
+      if (paypalContainer) {
+        paypalContainer.innerHTML = '<p class="payment-option-disabled">PayPal-Zahlungen sind derzeit nicht verfügbar. Bitte wähle eine andere Zahlungsmethode.</p>';
+      }
+      
+      console.warn('PayPal-Zahlungsoption wurde deaktiviert, da keine gültige Client-ID konfiguriert ist.');
+    } catch (err) {
+      console.error('Fehler beim Deaktivieren der PayPal-Zahlungsoption:', err);
     }
   }
 
@@ -60,6 +99,11 @@ class PayPalIntegration {
     // Rückgabe eines erfolgreich erfüllten Promise, wenn das SDK bereits geladen wurde
     if (this.sdkLoaded && window.paypal) {
       return Promise.resolve();
+    }
+
+    // Client-ID prüfen (Sicherheitsprüfung)
+    if (!this.clientId || this.clientId.trim() === '') {
+      return Promise.reject(new Error('PayPal Client ID ist nicht konfiguriert oder leer'));
     }
 
     // Neues Load-Promise erstellen
@@ -80,7 +124,7 @@ class PayPalIntegration {
         // SDK-URL mit Client-ID und Konfigurationsparametern
         // Zusätzliche Parameter: disable-funding=credit,sepa 
         // Kreditkarten (card) sind nicht deaktiviert, um die Kreditkartenzahlung über PayPal zu ermöglichen
-        const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${this.clientId}&currency=EUR&intent=capture&disable-funding=credit,sepa`;
+        const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(this.clientId)}&currency=EUR&intent=capture&disable-funding=credit,sepa`;
         
         // Prüfen, ob das Script bereits die korrekte URL hat
         if (script.src !== sdkUrl) {
@@ -97,11 +141,13 @@ class PayPalIntegration {
         script.onerror = (error) => {
           console.error('Fehler beim Laden des PayPal SDK:', error);
           this.loadPromise = null;
+          this.disablePayPalPaymentOption();
           reject(error);
         };
       } catch (error) {
         console.error('Fehler beim Einrichten des PayPal SDK:', error);
         this.loadPromise = null;
+        this.disablePayPalPaymentOption();
         reject(error);
       }
     });
