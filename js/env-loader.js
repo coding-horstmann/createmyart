@@ -75,7 +75,7 @@ function setEmptyConfig() {
     FIREBASE_MESSAGING_SENDER_ID: '',
     FIREBASE_APP_ID: '',
     FIREBASE_MEASUREMENT_ID: '',
-    ADMIN_EMAIL: 'kontakt@create-my-art.de',
+    ADMIN_EMAIL: '',
     PAYPAL_CLIENT_ID: '',
     RUNWARE_API_KEY: ''
   };
