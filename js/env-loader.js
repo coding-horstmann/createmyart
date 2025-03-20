@@ -18,7 +18,8 @@ async function loadEnvironmentVariables() {
 
     // Versuchen, Umgebungsvariablen vom Server zu laden
     try {
-      const response = await fetch('/api/env');
+      const apiUrl = window.location.hostname.includes('localhost') ? 'http://localhost:3000/api/env' : '/api/env';
+      const response = await fetch(apiUrl);
       if (response.ok) {
         const data = await response.json();
         envVars = data;

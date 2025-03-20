@@ -6,8 +6,13 @@
 export default function handler(req, res) {
   // CORS-Header für Cross-Origin-Anfragen
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Bei OPTIONS-Anfragen sofort antworten (für CORS-Preflight)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   // Prüfen, ob die Anfrage eine GET-Anfrage ist
   if (req.method !== 'GET') {
@@ -32,6 +37,9 @@ export default function handler(req, res) {
     // PayPal Client ID (nur die client ID ist für das Frontend nötig)
     PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID || '',
   };
+
+  // Debugging-Info (nur für Entwicklung)
+  console.log('API-Endpunkt für Umgebungsvariablen aufgerufen');
 
   // HTTP 200 OK mit den Umgebungsvariablen
   return res.status(200).json(clientEnvVars);

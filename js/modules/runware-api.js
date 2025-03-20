@@ -31,8 +31,12 @@ export const RunwareAPI = {
     // Bildgenerierung über Server-Endpunkt
     async generateImage(prompt) {
         try {
+            // Pfad zum API-Endpunkt basierend auf der Umgebung
+            const apiUrl = window.location.hostname.includes('localhost') ? 
+                'http://localhost:3000/api/generate-image' : '/api/generate-image';
+            
             // Anfrage an den Server-Endpunkt statt direkt an Runware
-            const response = await fetch('/api/generate-image', {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
