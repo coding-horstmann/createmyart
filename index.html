@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreateMyArt - KI-generierte Poster</title>
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/payment-bar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- PayPal JavaScript SDK - wird dynamisch mit der Client-ID geladen -->
+    <script id="paypal-js" defer></script>
+</head>
+<body>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container">
+            <p>Kostenloser Versand innerhalb von 5 Werktagen</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="img/logo.png" alt="CreateMyArt Logo" id="site-logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#create-section">Erstellen</a></li>
+                    <li><a href="#inspiration">Inspiration</a></li>
+                    <li><a href="#hints">FAQ</a></li>
+                </ul>
+            </nav>
+            <div class="cart">
+                <a href="#cart" id="cart-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Erstelle dein eigenes KI Poster</h1>
+                <p class="hero-text">Verwandle deine Ideen in einzigartige Kunstwerke mit unserer KI-Technologie. Perfekt für dein Zuhause oder als Geschenk.</p>
+                <a href="#create-section" class="btn btn-primary">Jetzt erstellen</a>
+            </div>
+            <div class="hero-image">
+                <div id="hero-poster">CreateMyArt<br>KI-generierte Kunstwerke</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification Bar -->
+    <section class="notification-bar">
+        <div class="container">
+            <div class="notification-item">
+                <i class="fas fa-truck"></i>
+                <span>Kostenloser Versand</span>
+            </div>
+            <div class="notification-item">
+                <i class="fas fa-leaf"></i>
+                <span>FSC zertifiziertes Papier</span>
+            </div>
+            <div class="notification-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Zustellung innerhalb von 5 Werktagen</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create Section -->
+    <section id="create-section" class="create-section">
+        <div class="container">
+            <div class="create-header">
+                <h2>Erstelle dein einzigartiges KI-Poster</h2>
+                <p class="create-subtitle">Lass deiner Kreativität freien Lauf und erschaffe ein Kunstwerk, das es nur einmal gibt</p>
+            </div>
+            
+            <div class="create-content">
+                <div class="prompt-container">
+                    <label for="prompt-input">Beschreibe dein Wunschmotiv:</label>
+                    <textarea id="prompt-input" placeholder="z.B. Ein Sonnenuntergang über Bergen im Aquarell-Stil, mit warmen Orangetönen und sanften Pinselstrichen"></textarea>
+                    <div class="prompt-suggestions">
+                        <p>Tipps: Füge Details zu <span>Stil</span>, <span>Farben</span>, <span>Stimmung</span> oder <span>Komposition</span> hinzu</p>
+                    </div>
+                    <button id="generate-btn" class="btn btn-primary">Kunstwerk erstellen</button>
+                    <div class="generation-counter" style="text-align: center; margin-top: 15px;">
+                        <p>Verbleibende Generierungen heute: <span id="remaining-generations">30</span>/30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading-indicator" id="loading-indicator">
+                <div class="spinner"></div>
+                <i class="fas fa-coffee" style="font-size: 2rem; color: #795548; margin: 15px 0;"></i>
+                <p>Dein Kunstwerk wird erstellt...</p>
+            </div>
+            
+            <div class="results-container" id="results-container">
+                <!-- Generierte Bilder werden hier angezeigt -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="benefits-section">
+        <div class="container">
+            <div class="benefit-item">
+                <img src="img/benefits/shipping.png" alt="Kostenloser Versand" class="benefit-image">
+                <h3>Kostenloser Versand</h3>
+                <p>Für alle Bestellungen innerhalb Deutschlands</p>
+            </div>
+            <div class="benefit-item">
+                <img src="img/benefits/fsc.png" alt="FSC zertifiziertes Papier" class="benefit-image">
+                <h3>FSC zertifiziertes Papier</h3>
+                <p>Hochwertige und nachhaltige Materialien</p>
+            </div>
+            <div class="benefit-item">
+                <img src="img/benefits/secure.png" alt="Sichere Zahlung" class="benefit-image">
+                <h3>Sichere Zahlung</h3>
+                <p>Verschlüsselte Transaktionen mit PayPal und Stripe</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inspiration Section -->
+    <section id="inspiration" class="inspiration-section">
+        <div class="container">
+            <h2>Inspiration</h2>
+            <div class="inspiration-grid">
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-1">Landschaft im Aquarell-Stil</div>
+                    <p>Landschaft im Aquarell-Stil</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-2">Abstrakte Kunst in Pastellfarben</div>
+                    <p>Abstrakte Kunst in Pastellfarben</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-3">Minimalistisches Stadtbild</div>
+                    <p>Minimalistisches Stadtbild</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-4">Naturmotiv im Vintage-Stil</div>
+                    <p>Naturmotiv im Vintage-Stil</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-5">Geometrische Formen in Neonfarben</div>
+                    <p>Geometrische Formen in Neonfarben</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-6">Surreale Traumlandschaft</div>
+                    <p>Surreale Traumlandschaft</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-7">Japanischer Ukiyo-e Stil</div>
+                    <p>Japanischer Ukiyo-e Stil</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-8">Futuristisches Sci-Fi Design</div>
+                    <p>Futuristisches Sci-Fi Design</p>
+                </div>
+                <div class="inspiration-item">
+                    <div class="inspiration-placeholder inspiration-9">Botanische Illustration</div>
+                    <p>Botanische Illustration</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Methods Bar -->
+    <section class="payment-bar">
+        <div class="container">
+            <div class="payment-methods">
+                <div class="payment-method paypal">
+                    <img src="img/payment/paypal.svg" alt="PayPal">
+                </div>
+                <div class="payment-method visa">
+                    <img src="img/payment/visa.svg" alt="Visa">
+                </div>
+                <div class="payment-method mastercard">
+                    <img src="img/payment/mastercard.svg" alt="Mastercard">
+                </div>
+                <div class="payment-method amex">
+                    <img src="img/payment/amex.svg" alt="American Express">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Blocks -->
+    <section class="info-blocks">
+        <div class="container">
+            <div class="info-block">
+                <h3>Wie funktioniert es?</h3>
+                <p>Unsere KI-Technologie verwandelt deine Textbeschreibung in ein einzigartiges Kunstwerk. Gib einfach ein, was du dir vorstellst - sei es eine Landschaft, ein abstraktes Konzept oder ein bestimmtes Motiv. Die KI interpretiert deine Worte und erstellt ein Bild, das du als hochwertiges Poster bestellen kannst. Jedes Ergebnis ist einzigartig und wird speziell für dich generiert.</p>
+                <p>Die Kraft der KI-Bildgenerierung liegt in der Individualisierung. Je detaillierter deine Beschreibung, desto genauer kann die KI deine Vision umsetzen. Experimentiere mit verschiedenen Stilen wie "Aquarell", "Ölgemälde" oder "Minimalistisch". Füge Farbvorschläge hinzu oder beschreibe die Stimmung, die du einfangen möchtest.</p>
+            </div>
+            <div id="shipping" class="info-block">
+                <h3>Qualität und Produktion</h3>
+                <p>Wir drucken dein KI-generiertes Kunstwerk auf Premium-Papier mit 250g/m², das FSC-zertifiziert ist. Unsere Drucktechnologie gewährleistet lebendige Farben und scharfe Details, die dein Kunstwerk zum Leben erwecken. Die Poster sind in verschiedenen Größen erhältlich:</p>
+                <ul>
+                    <li>21 x 29,70 cm (20,65 €)</li>
+                    <li>29,70 x 42 cm A3 (33,73 €)</li>
+                    <li>42 x 59,40 cm A2 (37,80 €)</li>
+                    <li>50 x 70 cm (33,70 €)</li>
+                    <li>59,40 x 84,10 cm A1 (50,63 €)</li>
+                    <li>84,10 x 118,90 cm A0 (50,63 €)</li>
+                </ul>
+                <p>Alle Größen werden auf hochwertigem 250g/m² Papier gedruckt.</p>
+                <p>Nach deiner Bestellung wird dein Poster sorgfältig in einer stabilen Röhre verpackt, um Beschädigungen zu vermeiden. Der Versand innerhalb Deutschlands ist kostenlos und erfolgt innerhalb von 1-2 Werktagen nach der Bestellung. Die Lieferzeit beträgt in der Regel 3-5 Werktage. Internationale Lieferungen sind ebenfalls möglich, mit entsprechenden Versandkosten.</p>
+            </div>
+            <div class="info-block">
+                <h3>Nutzung und Bedingungen</h3>
+                <p>Du kannst bis zu 30 Bilder pro Tag generieren. Diese Begrenzung stellt sicher, dass unser Service für alle Nutzer verfügbar bleibt. Die von dir erstellten Bilder sind für deinen persönlichen Gebrauch bestimmt. Wenn du ein Poster kaufst, erhältst du das Recht, es zu Hause aufzuhängen oder als Geschenk weiterzugeben, jedoch nicht für kommerzielle Zwecke zu verwenden.</p>
+            </div>
+            <div class="info-block">
+                <h3>Zahlung und Kundenservice</h3>
+                <p>Wir bieten sichere Zahlungsmöglichkeiten über PayPal und Stripe an. Beide Methoden gewährleisten eine verschlüsselte Übertragung deiner Zahlungsdaten. Bei Problemen mit deiner Bestellung oder Fragen zur Zahlung steht unser Kundenservice gerne zur Verfügung. Kontaktiere uns einfach über das Kontaktformular oder per E-Mail.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="hints" class="faq-section">
+        <div class="container">
+            <h2>FAQ</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Wie funktioniert die KI-Bildgenerierung?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Unsere KI wurde mit Millionen von Bildern trainiert und kann aus deiner Textbeschreibung ein neues, einzigartiges Bild erstellen. Je detaillierter deine Beschreibung, desto besser kann die KI deine Vision umsetzen.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Wie lange dauert die Bildgenerierung?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Die Generierung eines Bildes dauert in der Regel 10-30 Sekunden, abhängig von der Komplexität deiner Anfrage und der aktuellen Serverauslastung.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Kann ich das generierte Bild vor dem Kauf anpassen?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Aktuell bieten wir keine direkten Anpassungsoptionen. Wenn du mit dem Ergebnis nicht zufrieden bist, kannst du einen neuen Prompt eingeben und ein neues Bild generieren (im Rahmen deines täglichen Limits).</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Welche Postergrößen sind verfügbar?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Wir bieten folgende Größen an:</p>
+                        <ul>
+                            <li>21 x 29,70 cm (20,65 €)</li>
+                            <li>29,70 x 42 cm A3 (33,73 €)</li>
+                            <li>42 x 59,40 cm A2 (37,80 €)</li>
+                            <li>50 x 70 cm (33,70 €)</li>
+                            <li>59,40 x 84,10 cm A1 (50,63 €)</li>
+                            <li>84,10 x 118,90 cm A0 (50,63 €)</li>
+                        </ul>
+                        <p>Alle Größen werden auf hochwertigem 250g/m² Papier gedruckt.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Wie viele Bilder kann ich pro Tag generieren?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Du kannst bis zu 30 Bilder pro Tag generieren. Dieser Zähler wird täglich um Mitternacht (MEZ) zurückgesetzt.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CreateMyArt</h3>
+                    <p>Dein Partner für einzigartige, KI-generierte Kunstwerke.</p>
+                    <p><a href="mailto:kontakt@create-my-art.de">kontakt@create-my-art.de</a></p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Service</h3>
+                    <ul>
+                        <li><a href="#hints">FAQ</a></li>
+                        <li><a href="#benefits">Versand & Lieferung</a></li>
+                        <li><a href="#create-section">Personalisiertes Poster erstellen</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Rechtliches</h3>
+                    <ul>
+                        <li><a href="agb.html">AGB</a></li>
+                        <li><a href="datenschutz.html">Datenschutz</a></li>
+                        <li><a href="impressum.html">Impressum</a></li>
+                        <li><a href="widerrufsrecht.html">Widerrufsrecht</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Zahlungsmethoden</h3>
+                    <div class="payment-icons">
+                        <img src="img/payment/paypal.svg" alt="PayPal">
+                        <img src="img/payment/visa.svg" alt="Visa">
+                        <img src="img/payment/mastercard.svg" alt="Mastercard">
+                        <img src="img/payment/amex.svg" alt="American Express">
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreateMyArt. Alle Rechte vorbehalten.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar-backdrop" class="sidebar-backdrop"></div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <span class="close-sidebar">&times;</span>
+        <h2>Warenkorb</h2>
+        <div id="cart-items" class="cart-items">
+            <!-- Warenkorb-Elemente werden hier eingefügt -->
+        </div>
+        <div class="cart-summary">
+            <p>Gesamtsumme: <span id="cart-total">0,00 €</span></p>
+            <button id="checkout-btn" class="btn btn-primary">Zur Kasse</button>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="image-preview-modal" class="modal">
+        <div class="modal-content image-preview-content">
+            <span class="close-modal">&times;</span>
+            <img id="preview-image" src="" alt="Vergrößerte Vorschau">
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content checkout-content">
+            <span class="close-modal">&times;</span>
+            <h2>Bestellung abschließen</h2>
+            <form id="checkout-form">
+                <div class="form-section">
+                    <h3>Persönliche Daten</h3>
+                    <div class="form-group">
+                        <label for="checkout-firstname">Vorname*</label>
+                        <input type="text" id="checkout-firstname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-lastname">Nachname*</label>
+                        <input type="text" id="checkout-lastname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-email">E-Mail*</label>
+                        <input type="email" id="checkout-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-phone">Telefon</label>
+                        <input type="tel" id="checkout-phone">
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Lieferadresse</h3>
+                    <div class="form-group">
+                        <label for="checkout-street">Straße*</label>
+                        <input type="text" id="checkout-street" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-house-number">Hausnummer*</label>
+                        <input type="text" id="checkout-house-number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-zip">PLZ*</label>
+                        <input type="text" id="checkout-zip" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-city">Ort*</label>
+                        <input type="text" id="checkout-city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-country">Land*</label>
+                        <select id="checkout-country" required>
+                            <option value="DE">Deutschland</option>
+                            <option value="AT">Österreich</option>
+                            <option value="CH">Schweiz</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Zahlungsmethode*</h3>
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <input type="radio" id="payment-paypal" name="payment-method" value="paypal" required>
+                            <label for="payment-paypal">
+                                <i class="fab fa-paypal"></i> PayPal
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="payment-credit-card" name="payment-method" value="credit-card" required>
+                            <label for="payment-credit-card">
+                                <i class="far fa-credit-card"></i> Kreditkarte
+                            </label>
+                        </div>
+                    </div>
+                    <!-- PayPal Button Container - wird für interne Verarbeitung verwendet, aber nicht angezeigt -->
+                    <div id="paypal-button-container" style="display: none;"></div>
+                </div>
+                <div class="checkout-summary">
+                    <h3>Bestellübersicht</h3>
+                    <div id="checkout-items">
+                        <!-- Bestellübersicht wird hier eingefügt -->
+                    </div>
+                    <div class="checkout-total">
+                        <p>Gesamtsumme: <span id="checkout-total">0,00 €</span></p>
+                    </div>
+                </div>
+                <div class="form-group terms-checkbox">
+                    <input type="checkbox" id="terms-checkbox" required>
+                    <label for="terms-checkbox">Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a>, <a href="datenschutz.html" target="_blank">Datenschutzbestimmungen</a> und <a href="widerrufsrecht.html" target="_blank">Widerrufsbelehrung</a>*</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Jetzt kaufen</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="confirmation-content">
+                <i class="fas fa-check-circle"></i>
+                <h2>Vielen Dank für deine Bestellung!</h2>
+                <p>Deine Bestellnummer: <span id="order-number"></span></p>
+                <p>Wir haben dir eine Bestätigungs-E-Mail gesendet.</p>
+                <button id="continue-shopping" class="btn btn-primary">Weiter einkaufen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert-modal" class="modal">
+        <div class="modal-content custom-alert-content">
+            <span class="close-modal">&times;</span>
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 id="custom-alert-title">Hinweis</h3>
+            <p id="custom-alert-message"></p>
+            <button id="custom-alert-button" class="btn btn-primary">Ok</button>
+        </div>
+    </div>
+
+    <!-- Placeholder Images für die Entwicklung -->
+    <div style="display: none;">
+        <img id="placeholder-1" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%221000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22800%22%20height%3D%221000%22%20fill%3D%22%233a86ff%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22500%22%20font-family%3D%22Arial%22%20font-size%3D%2236%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%3EKI%20Poster%201%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Placeholder 1">
+        <img id="placeholder-2" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%221000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22800%22%20height%3D%221000%22%20fill%3D%22%23ff006e%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22500%22%20font-family%3D%22Arial%22%20font-size%3D%2236%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%3EKI%20Poster%202%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Placeholder 2">
+        <img id="placeholder-3" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%221000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22800%22%20height%3D%221000%22%20fill%3D%22%23ffbe0b%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22500%22%20font-family%3D%22Arial%22%20font-size%3D%2236%22%20fill%3D%22%23333333%22%20text-anchor%3D%22middle%22%3EKI%20Poster%203%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Placeholder 3">
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loading-message">Bitte warten...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/env-loader.js"></script>
+    <script type="module" src="js/firebase-integration.js"></script>
+    <script type="module" src="js/paypal-integration.js"></script>
+    <script type="module" src="js/checkout.js"></script>
+    <script src="js/modules/validation.js"></script>
+    <script src="js/modules/cart.js"></script>
+    <script src="js/modules/checkout.js"></script>
+    <script src="js/script.js" type="module"></script>
+</body>
+</html> 

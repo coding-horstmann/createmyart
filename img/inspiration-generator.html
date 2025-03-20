@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspiration Bilder Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .inspiration-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .inspiration-image {
+            height: 250px;
+            position: relative;
+        }
+        
+        .inspiration-1 { background: linear-gradient(135deg, #3a86ff 0%, #5e60ce 100%); }
+        .inspiration-2 { background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); }
+        .inspiration-3 { background: linear-gradient(135deg, #fb5607 0%, #ffbe0b 100%); }
+        .inspiration-4 { background: linear-gradient(135deg, #06d6a0 0%, #1b9aaa 100%); }
+        .inspiration-5 { background: linear-gradient(135deg, #ef476f 0%, #ffd166 100%); }
+        .inspiration-6 { background: linear-gradient(135deg, #073b4c 0%, #118ab2 100%); }
+        
+        .inspiration-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/></svg>');
+            opacity: 0.5;
+        }
+        
+        .inspiration-caption {
+            padding: 15px;
+            background-color: white;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .instructions {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instructions h2 {
+            margin-top: 0;
+        }
+        
+        .instructions ol {
+            line-height: 1.6;
+        }
+        
+        .instructions code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inspiration Bilder Generator</h1>
+    
+    <div class="grid">
+        <div class="inspiration-item">
+            <div class="inspiration-image inspiration-1"></div>
+            <div class="inspiration-caption">Landschaft im Aquarell-Stil</div>
+        </div>
+        
+        <div class="inspiration-item">
+            <div class="inspiration-image inspiration-2"></div>
+            <div class="inspiration-caption">Abstrakte Kunst in Pastellfarben</div>
+        </div>
+        
+        <div class="inspiration-item">
+            <div class="inspiration-image inspiration-3"></div>
+            <div class="inspiration-caption">Minimalistisches Stadtbild</div>
+        </div>
+        
+        <div class="inspiration-item">
+            <div class="inspiration-image inspiration-4"></div>
+            <div class="inspiration-caption">Naturmotiv im Vintage-Stil</div>
+        </div>
+        
+        <div class="inspiration-item">
+            <div class="inspiration-image inspiration-5"></div>
+            <div class="inspiration-caption">Geometrische Formen in Neonfarben</div>
+        </div>
+        
+        <div class="inspiration-item">
+            <div class="inspiration-image inspiration-6"></div>
+            <div class="inspiration-caption">Surreale Traumlandschaft</div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>Anleitung zum Erstellen der Inspiration-Bilder</h2>
+        <p>Diese Seite zeigt Platzhalter für die Inspiration-Bilder. Um sie als Bilder zu speichern:</p>
+        <ol>
+            <li>Mache Screenshots von jedem der sechs Inspiration-Elemente</li>
+            <li>Speichere die Screenshots als <code>inspiration-1.jpg</code>, <code>inspiration-2.jpg</code>, usw. im <code>img</code>-Verzeichnis</li>
+            <li>Alternativ kannst du auch eigene Bilder verwenden und sie entsprechend benennen</li>
+        </ol>
+        <p>Hinweis: Für die Produktionsumgebung solltest du hochwertigere Bilder verwenden, die tatsächliche KI-generierte Kunstwerke zeigen.</p>
+    </div>
+</body>
+</html> 

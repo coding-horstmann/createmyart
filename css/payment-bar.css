@@ -1,0 +1,93 @@
+/* Payment Bar Styles */
+.payment-bar {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    margin: 30px 0;
+}
+
+.payment-bar .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-methods {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.payment-method {
+    margin: 0 15px;
+}
+
+/* PayPal - Long */
+.payment-method.paypal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+    isolation: isolate;
+    width: 86px;
+    height: 32px;
+    flex: none;
+    order: 3;
+    flex-grow: 0;
+}
+
+/* Visa */
+.payment-method.visa {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    width: 54px;
+    height: 32px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+/* Mastercard */
+.payment-method.mastercard {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    isolation: isolate;
+    width: 54px;
+    height: 32px;
+    flex: none;
+    order: 6;
+    flex-grow: 0;
+}
+
+/* Amex */
+.payment-method.amex {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    width: 54px;
+    height: 32px;
+    flex: none;
+    order: 7;
+    flex-grow: 0;
+}
+
+@media (max-width: 768px) {
+    .payment-methods {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .payment-method {
+        margin: 10px;
+    }
+} 

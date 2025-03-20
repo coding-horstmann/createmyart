@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGB - CreateMyArt</title>
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container">
+            <p>Kostenloser Versand innerhalb von 5 Werktagen</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="img/logo.png" alt="CreateMyArt Logo" id="site-logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html#create-section">Erstellen</a></li>
+                    <li><a href="index.html#inspiration">Inspiration</a></li>
+                    <li><a href="index.html#hints">FAQ</a></li>
+                </ul>
+            </nav>
+            <div class="cart">
+                <a href="#" id="cart-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="page-content">
+        <div class="container">
+            <h1>Allgemeine Geschäftsbedingungen</h1>
+            <div class="content-block">
+                <h2>1. Geltungsbereich</h2>
+                <p>Diese Allgemeinen Geschäftsbedingungen (nachfolgend "AGB") gelten für alle Verträge, die zwischen CreateMyArt und dem Kunden über den Online-Shop geschlossen werden.</p>
+                
+                <h2>2. Vertragsschluss</h2>
+                <p>Die Darstellung der Produkte im Online-Shop stellt kein rechtlich bindendes Angebot, sondern einen unverbindlichen Online-Katalog dar. Durch Anklicken des Buttons "Jetzt kaufen" geben Sie eine verbindliche Bestellung der im Warenkorb enthaltenen Waren ab.</p>
+                
+                <h2>3. Preise und Zahlungsbedingungen</h2>
+                <p>Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer. Die Zahlung erfolgt per PayPal oder Kreditkarte.</p>
+                
+                <h2>4. Lieferung</h2>
+                <p>Die Lieferung erfolgt innerhalb von 5 Werktagen nach Zahlungseingang. Der Versand innerhalb Deutschlands ist kostenlos.</p>
+                
+                <h2>5. Widerrufsrecht</h2>
+                <p>Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Nähere Informationen finden Sie in unserer Widerrufsbelehrung.</p>
+                
+                <h2>6. Gewährleistung</h2>
+                <p>Es gelten die gesetzlichen Gewährleistungsrechte.</p>
+                
+                <h2>7. Datenschutz</h2>
+                <p>Informationen zum Datenschutz finden Sie in unserer Datenschutzerklärung.</p>
+                
+                <h2>8. Schlussbestimmungen</h2>
+                <p>Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz von CreateMyArt.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CreateMyArt</h3>
+                    <p>Dein Partner für einzigartige, KI-generierte Kunstwerke.</p>
+                    <p><a href="mailto:kontakt@create-my-art.de">kontakt@create-my-art.de</a></p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Service</h3>
+                    <ul>
+                        <li><a href="index.html#hints">FAQ</a></li>
+                        <li><a href="index.html#benefits">Versand & Lieferung</a></li>
+                        <li><a href="index.html#create-section">Personalisiertes Poster erstellen</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Rechtliches</h3>
+                    <ul>
+                        <li><a href="agb.html">AGB</a></li>
+                        <li><a href="datenschutz.html">Datenschutz</a></li>
+                        <li><a href="impressum.html">Impressum</a></li>
+                        <li><a href="widerrufsrecht.html">Widerrufsrecht</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Zahlungsmethoden</h3>
+                    <div class="payment-icons">
+                        <img src="img/payment/paypal.svg" alt="PayPal">
+                        <img src="img/payment/visa.svg" alt="Visa">
+                        <img src="img/payment/mastercard.svg" alt="Mastercard">
+                        <img src="img/payment/amex.svg" alt="American Express">
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreateMyArt. Alle Rechte vorbehalten.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar-backdrop" class="sidebar-backdrop"></div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <span class="close-sidebar">&times;</span>
+        <h2>Warenkorb</h2>
+        <div id="cart-items" class="cart-items">
+            <!-- Warenkorb-Elemente werden hier eingefügt -->
+        </div>
+        <div class="cart-summary">
+            <p>Gesamtsumme: <span id="cart-total">0,00 €</span></p>
+            <button id="checkout-btn" class="btn btn-primary">Zur Kasse</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <!-- Modal-Inhalt wird dynamisch eingefügt -->
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="confirmation-content">
+                <i class="fas fa-check-circle"></i>
+                <h2>Vielen Dank für deine Bestellung!</h2>
+                <p>Deine Bestellnummer: <span id="order-number"></span></p>
+                <p>Wir haben dir eine Bestätigungs-E-Mail gesendet.</p>
+                <button id="continue-shopping" class="btn btn-primary">Weiter einkaufen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert-modal" class="modal">
+        <div class="modal-content custom-alert-content">
+            <span class="close-modal">&times;</span>
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 id="custom-alert-title">Hinweis</h3>
+            <p id="custom-alert-message"></p>
+            <button id="custom-alert-button" class="btn btn-primary">Ok</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/env-loader.js"></script>
+    <script type="module" src="js/firebase-integration.js"></script>
+    <script type="module" src="js/paypal-integration.js"></script>
+    <script type="module" src="js/checkout.js"></script>
+    <script src="js/modules/validation.js"></script>
+    <script src="js/modules/cart.js"></script>
+    <script src="js/modules/checkout.js"></script>
+    <script src="js/script.js" type="module"></script>
+</body>
+</html> 

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster Mockup Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        
+        .poster {
+            width: 500px;
+            height: 700px;
+            background: linear-gradient(135deg, #3a86ff 0%, #ff006e 100%);
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .poster-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            width: 80%;
+        }
+        
+        .poster-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .poster-subtitle {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        
+        .poster-frame {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+        
+        .instructions h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .instructions p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .instructions code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="poster-frame"></div>
+        <div class="poster-content">
+            <div class="poster-title">CreateMyArt</div>
+            <div class="poster-subtitle">KI-generierte Kunstwerke</div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>Anleitung zum Erstellen des Poster-Mockups</h2>
+        <p>Diese Seite zeigt ein einfaches Poster-Mockup. Um es als Bild zu speichern:</p>
+        <ol>
+            <li>Mache einen Screenshot dieser Seite (nur des Poster-Bereichs)</li>
+            <li>Speichere den Screenshot als <code>poster-mockup.jpg</code> im <code>img</code>-Verzeichnis</li>
+            <li>Alternativ kannst du auch ein eigenes Bild verwenden und es als <code>poster-mockup.jpg</code> speichern</li>
+        </ol>
+        <p>Hinweis: Für die Produktionsumgebung solltest du ein hochwertigeres Bild verwenden.</p>
+    </div>
+</body>
+</html> 
