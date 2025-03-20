@@ -336,14 +336,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Bildgenerierung
     async function handleImageGeneration(e) {
-        if (e) e.preventDefault();
+        e.preventDefault();
         
-        // Prompt-Eingabe validieren
+        // Werte aus dem Formular holen
         const promptInput = getElement('#prompt-input');
-        const prompt = promptInput ? promptInput.value.trim() : '';
+        const prompt = promptInput.value.trim();
         
+        // Validierung
         if (!prompt) {
-            showCustomAlert('Bitte gib eine Beschreibung für dein Wunschmotiv ein.');
+            showCustomAlert('Bitte gib einen Prompt ein, um ein Bild zu erstellen.');
+            return;
+        }
+        
+        // Prompt validieren
+        if (!ValidationModule.validatePrompt(prompt)) {
             return;
         }
         
@@ -370,15 +376,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Runware API verwenden
             let result;
             try {
+                console.log('Starte Bildgenerierung mit Prompt:', prompt);
                 result = await RunwareAPI.generateImage(prompt);
+                console.log('Runware API Antwort erhalten:', result);
             } catch (apiError) {
                 console.error('Primäre Bildgenerierung fehlgeschlagen:', apiError);
                 console.warn('Versuche Fallback-Generierung...');
                 result = await RunwareAPI.generateImageFallback(prompt);
             }
             
-            if (!result || !result.url) {
+            if (!result) {
                 throw new Error('Keine Bilddaten erhalten');
+            }
+            
+            console.log('Verarbeite Bildgenerierungsergebnis:', result);
+            
+            // Prüfen, ob die URL im richtigen Format vorhanden ist
+            if (!result.url && result.imageURL) {
+                // Falls die API imageURL statt url zurückgibt
+                console.log('Verwende imageURL statt url:', result.imageURL);
+                result.url = result.imageURL;
+            }
+            
+            if (!result.url) {
+                throw new Error('Keine URL in den Bilddaten erhalten');
             }
             
             // Bild anzeigen
@@ -390,9 +411,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 metadata: result.metadata || { prompt }
             };
             
+            console.log('Bildanzeige vorbereitet:', imageData);
+            
             // Zum State hinzufügen und anzeigen
             state.generatedImages.push(imageData);
             saveGeneratedImagesToStorage(state.generatedImages);
+            
+            // Loading-Anzeige ausblenden und Ergebniscontainer anzeigen
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
+            if (resultsContainer) resultsContainer.style.display = 'grid';
+            
             displayGeneratedImage(imageData);
             
             // Generierungszähler aktualisieren
@@ -411,6 +439,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function displayGeneratedImage(image) {
+        console.log('Zeige generiertes Bild an:', image);
+        
+        // Stellen Sie sicher, dass der Ergebniscontainer sichtbar ist
+        const resultsContainer = document.getElementById('results-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'none';
+        }
+        
+        if (resultsContainer) {
+            resultsContainer.style.display = 'grid';
+        }
+        
         // Kürze den Prompt auf die erste Zeile
         const promptLines = image.prompt.split('\n');
         let displayPrompt = promptLines[0];
@@ -426,7 +468,8 @@ document.addEventListener('DOMContentLoaded', function() {
         resultItem.className = 'result-item';
         resultItem.innerHTML = `
             <div class="result-image" data-id="${image.id}">
-                <img src="${image.url}" alt="Generiertes Poster">
+                <img src="${image.url}" alt="Generiertes Poster" onload="this.parentElement.classList.add('loaded')">
+                <div class="image-loading">Bild wird geladen...</div>
                 <button class="delete-image-btn" data-id="${image.id}" title="Bild löschen">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -461,8 +504,10 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         // Füge das Element am Anfang des Containers ein
-        const resultsContainer = document.getElementById('results-container');
         if (resultsContainer) {
+            // Stelle sicher, dass der Container sichtbar ist
+            resultsContainer.style.display = 'grid';
+            
             if (resultsContainer.firstChild) {
                 resultsContainer.insertBefore(resultItem, resultsContainer.firstChild);
             } else {
@@ -472,8 +517,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Event-Listener für das Bild (Vorschau)
             const imageElement = resultItem.querySelector('.result-image');
             if (imageElement) {
-                imageElement.addEventListener('click', () => {
-                    openImagePreview(image.url);
+                imageElement.addEventListener('click', (e) => {
+                    // Nicht die Vorschau öffnen, wenn auf den Delete-Button geklickt wurde
+                    if (!e.target.closest('.delete-image-btn')) {
+                        openImagePreview(image.url);
+                    }
                 });
             }
             
@@ -501,7 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     copyPromptToClipboard(e.currentTarget);
                 });
             }
-
+            
             // Event-Listener für den Löschen-Button
             const deleteBtn = resultItem.querySelector('.delete-image-btn');
             if (deleteBtn) {
@@ -510,21 +558,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     deleteGeneratedImage(image.id);
                 });
             }
-            
-            // Automatisch zum generierten Kunstwerk scrollen
-            setTimeout(() => {
-                const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
-                const targetPosition = resultItem.getBoundingClientRect().top + window.pageYOffset;
-                const offsetValue = 20;
-                const offsetPosition = targetPosition - headerHeight - offsetValue;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }, 100);
         } else {
-            console.error('Results-Container nicht gefunden');
+            console.error('Ergebniscontainer nicht gefunden');
         }
     }
     

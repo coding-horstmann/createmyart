@@ -1710,4 +1710,29 @@ input:invalid {
     font-size: 12px;
     color: #721c24;
     font-style: italic;
+}
+
+/* Styles für das Bildladen */
+.result-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.result-image .image-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.result-image.loaded .image-loading {
+    display: none;
 } 
