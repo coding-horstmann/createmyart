@@ -40,6 +40,29 @@ async function handler(req, res) {
       return res.status(500).json({ error: 'Runware API key not configured' });
     }
 
+    // Generiere UUID für die Anfrage
+    const taskUUID = uuidv4();
+    
+    console.log('Runware API-Anfrage mit Prompt:', prompt);
+    
+    // Payload für die Runware API gemäß Dokumentation
+    // Das authentication-Objekt muss als erstes Element im Array stehen
+    const payload = [
+      {
+        taskType: "authentication",
+        apiKey: apiKey
+      },
+      {
+        taskType: "imageInference",
+        taskUUID: taskUUID,
+        positivePrompt: prompt,
+        width: 512,
+        height: 512,
+        model: "civitai:102438@133677",
+        numberResults: 1
+      }
+    ];
+
     // Runware API aufrufen
     const response = await fetch('https://api.runware.ai/v1', {
       method: 'POST',
@@ -47,27 +70,51 @@ async function handler(req, res) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
-      body: JSON.stringify([
-        {
-          taskType: "imageInference",
-          taskUUID: uuidv4(),
-          positivePrompt: prompt,
-          width: 512,
-          height: 512,
-          model: "civitai:102438@133677",
-          numberResults: 1
-        }
-      ])
+      body: JSON.stringify(payload)
     });
+
+    // Überprüfen, ob die Anfrage erfolgreich war
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Runware API-Fehler:', response.status, errorText);
+      return res.status(response.status).json({ 
+        error: 'Fehler bei der Runware API-Anfrage', 
+        message: `Status: ${response.status}, Antwort: ${errorText}`
+      });
+    }
 
     // Antwort parsen
     const data = await response.json();
+    console.log('Runware API-Antwort:', JSON.stringify(data));
 
-    // Antwort an den Client weiterleiten
-    return res.status(200).json(data);
+    // Verarbeiten der API-Antwort
+    if (data.data && data.data.length > 0) {
+      // Finde den Image-Inference-Response (nicht das Auth-Objekt)
+      const imageData = data.data.find(item => item.taskType === 'imageInference') || data.data[0];
+      
+      // Formate das Bild in das vom Frontend erwartete Format
+      const formattedResponse = {
+        data: [{
+          taskType: "imageInference",
+          taskUUID: imageData.taskUUID || taskUUID,
+          url: imageData.imageURL, // Runware gibt imageURL zurück
+          model: "runware-model",
+          metadata: {
+            prompt: prompt
+          }
+        }]
+      };
+      
+      return res.status(200).json(formattedResponse);
+    } else if (data.errors) {
+      console.error('Runware API-Fehler in Antwort:', data.errors);
+      return res.status(400).json({ error: 'Fehler bei der Bildgenerierung', errors: data.errors });
+    } else {
+      return res.status(500).json({ error: 'Unerwartetes Format der Runware-API-Antwort', data });
+    }
   } catch (error) {
-    console.error('Error generating image:', error);
-    return res.status(500).json({ error: 'Error generating image', message: error.message });
+    console.error('Fehler bei der Bildgenerierung:', error);
+    return res.status(500).json({ error: 'Fehler bei der Bildgenerierung', message: error.message });
   }
 }
 
