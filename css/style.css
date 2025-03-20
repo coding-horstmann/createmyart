@@ -493,6 +493,17 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+.generation-status-wrapper {
+    margin: 20px 0;
+    min-height: 50px;
+    position: relative;
 }
 
 .spinner {
@@ -522,6 +533,11 @@ p {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
     margin-top: 40px;
+}
+
+/* Änderungen für die Ladezeit, damit Bilder und Ladeindikator gleichzeitig sichtbar sind */
+.create-section .create-content + .generation-status-wrapper + .results-container {
+    margin-top: 20px;
 }
 
 .result-item {

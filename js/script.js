@@ -369,7 +369,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const resultsContainer = getElement('#results-container');
         
         if (loadingIndicator) loadingIndicator.style.display = 'flex';
-        if (resultsContainer) resultsContainer.style.display = 'none';
         
         // Bildgenerierung starten
         try {
