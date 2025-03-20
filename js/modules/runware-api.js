@@ -70,7 +70,9 @@ export const RunwareAPI = {
                 throw new Error("Ungültige Antwort von der API");
             }
         } catch (error) {
-            throw new Error(`Fehler bei der Bildgenerierung: ${error.message}`);
+            console.error('Fehler bei der Bildgenerierung:', error);
+            // Wenn die API fehlschlägt, verwenden wir den Fallback
+            return this.generateImageFallback(prompt);
         }
     },
 
@@ -79,12 +81,13 @@ export const RunwareAPI = {
         try {
             console.warn('Verwende Fallback-Methode für Bildgenerierung - nur für Entwicklung');
             
-            // Simuliere eine Antwort für die Entwicklung
+            // Ein einfaches SVG als Fallback zurückgeben
+            const randomId = Math.floor(Math.random() * 1000);
             return {
                 taskType: "imageInference",
-                taskUUID: crypto.randomUUID(),
+                taskUUID: randomId.toString(),
                 base64: "",
-                url: "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22512%22%20height%3D%22512%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22%23f2f2f2%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22256%22%20font-family%3D%22Arial%22%20font-size%3D%2224%22%20fill%3D%22%23333%22%20text-anchor%3D%22middle%22%3EBild%20konnte%20nicht%20generiert%20werden%3C%2Ftext%3E%3C%2Fsvg%3E",
+                url: `data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22512%22%20height%3D%22512%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22%23f2f2f2%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22256%22%20font-family%3D%22Arial%22%20font-size%3D%2224%22%20fill%3D%22%23333%22%20text-anchor%3D%22middle%22%3EFallback-Bild:%20${prompt}%3C%2Ftext%3E%3C%2Fsvg%3E`,
                 model: "fallback-model",
                 promptStrength: 7,
                 negativePrompt: "",
@@ -93,6 +96,7 @@ export const RunwareAPI = {
                 }
             };
         } catch (error) {
+            console.error('Fehler bei der Fallback-Bildgenerierung:', error);
             throw new Error(`Fehler bei der Fallback-Bildgenerierung: ${error.message}`);
         }
     },
@@ -101,6 +105,10 @@ export const RunwareAPI = {
     async generateImageDirect(prompt, apiKey) {
         try {
             console.log('Generiere Bild direkt mit Runware API');
+            
+            // UUID für die Anfrage generieren
+            const taskUUID = this.generateUUID();
+            
             const response = await fetch('https://api.runware.ai/v1', {
                 method: 'POST',
                 headers: {
@@ -110,7 +118,7 @@ export const RunwareAPI = {
                 body: JSON.stringify([
                     {
                         taskType: "imageInference",
-                        taskUUID: crypto.randomUUID(),
+                        taskUUID: taskUUID,
                         positivePrompt: prompt,
                         width: 512,
                         height: 512,
@@ -121,21 +129,40 @@ export const RunwareAPI = {
             });
             
             if (!response.ok) {
-                throw new Error(`Fehler bei direkter API-Anfrage: ${response.status} ${response.statusText}`);
+                throw new Error(`API-Anfragefehler: ${response.status} ${response.statusText}`);
             }
             
             const data = await response.json();
+            console.log('Runware API Antwort:', data);
             
-            if (data.data) {
-                return data.data[0];
-            } else if (data.errors) {
+            if (data.data && data.data.length > 0) {
+                const imageData = data.data[0];
+                console.log('Bild erfolgreich generiert:', imageData);
+                return imageData;
+            } else if (data.errors && data.errors.length > 0) {
                 throw new Error(data.errors[0].message);
             } else {
-                throw new Error("Ungültige Antwort von der direkten API");
+                console.error('Keine Bilddaten in der API-Antwort:', data);
+                return this.generateImageFallback(prompt);
             }
         } catch (error) {
             console.error('Fehler bei direkter Bildgenerierung:', error);
-            throw error;
+            // Bei Fehlern zum Fallback wechseln
+            return this.generateImageFallback(prompt);
         }
+    },
+    
+    // Hilfsfunktion zur Generierung einer UUID
+    generateUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        
+        // Fallback für Browser ohne crypto.randomUUID
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 }; 
