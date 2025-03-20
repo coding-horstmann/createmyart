@@ -843,6 +843,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (previewImage && imagePreviewModal) {
             previewImage.src = imageUrl;
             imagePreviewModal.style.display = 'block';
+            imagePreviewModal.classList.add('active');
         }
     }
     
@@ -865,6 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const checkoutModal = document.getElementById('checkout-modal');
         if (checkoutModal) {
             checkoutModal.style.display = 'block';
+            checkoutModal.classList.add('active');
             
             // Initialisiere das Checkout-Formular
             const form = document.getElementById('checkout-form');
@@ -886,7 +888,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const modals = [imagePreviewModal, checkoutModal, confirmationModal, customAlertModal];
         modals.forEach(modal => {
-            if (modal) modal.style.display = 'none';
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
         });
     }
     
@@ -898,37 +903,36 @@ document.addEventListener('DOMContentLoaded', function() {
             const alertModal = document.getElementById('custom-alert-modal');
             const alertTitle = document.getElementById('custom-alert-title');
             const alertMessage = document.getElementById('custom-alert-message');
-            const alertContent = document.querySelector('.custom-alert-content');
-            const alertButton = document.getElementById('custom-alert-button');
             
-            if (alertModal && alertMessage) {
-                // Inhalt setzen
+            if (alertModal && alertTitle && alertMessage) {
+                // Titel und Nachricht setzen
+                alertTitle.textContent = title;
                 alertMessage.textContent = message;
-                if (alertTitle) alertTitle.textContent = title;
                 
-                // Styling anpassen, wenn es sich um eine Limit-Meldung handelt
-                if (alertContent) {
-                    if (isLimitReached) {
-                        alertContent.classList.add('limit-reached');
-                    } else {
-                        alertContent.classList.remove('limit-reached');
-                    }
+                // Spezielles Styling für Limit-Meldungen
+                if (isLimitReached) {
+                    alertModal.classList.add('limit-reached');
+                } else {
+                    alertModal.classList.remove('limit-reached');
                 }
                 
                 // Modal anzeigen
                 alertModal.style.display = 'block';
+                alertModal.classList.add('active');
                 
                 // Event-Listener für Button zum Schließen
+                const alertButton = document.getElementById('custom-alert-button');
                 if (alertButton) {
-                    // Entferne vorhandene Event-Listener, um doppelte zu vermeiden
+                    // Entferne vorhandene Event-Listeners, um doppelte zu vermeiden
                     const newBtn = alertButton.cloneNode(true);
                     alertButton.parentNode.replaceChild(newBtn, alertButton);
                     
                     newBtn.addEventListener('click', function() {
                         alertModal.style.display = 'none';
+                        alertModal.classList.remove('active');
                     });
                 }
-                
+
                 // Event-Listener für Schließen-Button
                 const closeBtn = alertModal.querySelector('.close-modal');
                 if (closeBtn) {
@@ -938,6 +942,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     newCloseBtn.addEventListener('click', function() {
                         alertModal.style.display = 'none';
+                        alertModal.classList.remove('active');
                     });
                 }
             } else {
@@ -1289,6 +1294,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Modal anzeigen
                     confirmationModal.style.display = 'block';
+                    confirmationModal.classList.add('active');
                 }
                 
                 // LocalStorage-Eintrag löschen
