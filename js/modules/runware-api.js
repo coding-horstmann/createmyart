@@ -71,33 +71,7 @@ export const RunwareAPI = {
             }
         } catch (error) {
             console.error('Fehler bei der Bildgenerierung:', error);
-            // Wenn die API fehlschlägt, verwenden wir den Fallback
-            return this.generateImageFallback(prompt);
-        }
-    },
-
-    // Fallback: Direkte Bildgenerierung (nur für Entwicklungszwecke)
-    async generateImageFallback(prompt) {
-        try {
-            console.warn('Verwende Fallback-Methode für Bildgenerierung - nur für Entwicklung');
-            
-            // Ein einfaches SVG als Fallback zurückgeben
-            const randomId = Math.floor(Math.random() * 1000);
-            return {
-                taskType: "imageInference",
-                taskUUID: randomId.toString(),
-                base64: "",
-                url: `data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22512%22%20height%3D%22512%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22%23f2f2f2%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22256%22%20font-family%3D%22Arial%22%20font-size%3D%2224%22%20fill%3D%22%23333%22%20text-anchor%3D%22middle%22%3EFallback-Bild:%20${prompt}%3C%2Ftext%3E%3C%2Fsvg%3E`,
-                model: "fallback-model",
-                promptStrength: 7,
-                negativePrompt: "",
-                metadata: {
-                    prompt: prompt
-                }
-            };
-        } catch (error) {
-            console.error('Fehler bei der Fallback-Bildgenerierung:', error);
-            throw new Error(`Fehler bei der Fallback-Bildgenerierung: ${error.message}`);
+            throw error;
         }
     },
 
@@ -165,12 +139,11 @@ export const RunwareAPI = {
                 throw new Error(data.errors[0].message);
             } else {
                 console.error('Keine Bilddaten in der API-Antwort:', data);
-                return this.generateImageFallback(prompt);
+                throw new Error('Keine Bilddaten in der API-Antwort');
             }
         } catch (error) {
             console.error('Fehler bei direkter Bildgenerierung:', error);
-            // Bei Fehlern zum Fallback wechseln
-            return this.generateImageFallback(prompt);
+            throw error;
         }
     },
     

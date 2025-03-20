@@ -638,18 +638,10 @@ document.addEventListener('DOMContentLoaded', function() {
             price: price
         };
         
-        // Zum Warenkorb hinzufügen (sowohl state als auch CartModule aktualisieren)
-        if (window.CartModule) {
-            window.CartModule.addToCart(cartItem);
-            // State aktualisieren für andere Funktionen
-            state.cart = window.CartModule.getCart();
-        } else {
-            // Fallback, falls CartModule nicht verfügbar
-            state.cart.push(cartItem);
-            localStorage.setItem('cart', JSON.stringify(state.cart));
-        }
-        
-        updateCartCount();
+        // Zum Warenkorb hinzufügen (CartModule verwenden)
+        window.CartModule.addToCart(cartItem);
+        // State aktualisieren für andere Funktionen
+        state.cart = window.CartModule.getCart();
         
         // Öffne den Warenkorb automatisch
         openCartSidebar({ preventDefault: () => {} });
@@ -672,7 +664,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const price = getPrice(selectedSize);
         
         const cartItem = {
-            id: window.CartModule ? window.CartModule.generateUniqueId() : `cart_${Date.now()}`,
+            id: window.CartModule.generateUniqueId(),
             imageId: image.id, // Original-Bild-ID beibehalten
             url: image.url,
             prompt: image.prompt,
@@ -681,45 +673,26 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         // Leere den Warenkorb und füge nur dieses Item hinzu
-        if (window.CartModule) {
-            // Warenkorb leeren und nur dieses Element hinzufügen
-            window.CartModule.clearCart();
-            window.CartModule.addToCart(cartItem);
-            // State aktualisieren für andere Funktionen
-            state.cart = window.CartModule.getCart();
-        } else {
-            // Fallback, falls CartModule nicht verfügbar
-            state.cart = [cartItem];
-            localStorage.setItem('cart', JSON.stringify(state.cart));
-        }
-        
-        updateCartCount();
+        window.CartModule.clearCart();
+        window.CartModule.addToCart(cartItem);
+        // State aktualisieren für andere Funktionen
+        state.cart = window.CartModule.getCart();
         
         // Öffne direkt den Checkout
         openCheckoutModal();
     }
     
     function removeFromCart(itemId) {
-        if (window.CartModule) {
-            window.CartModule.removeFromCart(itemId);
-            // State aktualisieren für andere Funktionen
-            state.cart = window.CartModule.getCart();
-        } else {
-            // Fallback, falls CartModule nicht verfügbar
-            state.cart = state.cart.filter(item => item.id !== itemId);
-            localStorage.setItem('cart', JSON.stringify(state.cart));
-        }
-        
-        updateCartCount();
-        renderCartItems();
-        updateCheckoutButton();
+        window.CartModule.removeFromCart(itemId);
+        // State aktualisieren für andere Funktionen
+        state.cart = window.CartModule.getCart();
     }
     
     function updateCartCount() {
         const cartCount = document.getElementById('cart-count');
         if (cartCount) {
-            // Korrekte Anzahl aus aktuellem State oder CartModule holen
-            const count = window.CartModule ? window.CartModule.getItemCount() : state.cart.length;
+            // Korrekte Anzahl aus CartModule holen
+            const count = window.CartModule.getItemCount();
             cartCount.textContent = count;
         }
         
@@ -751,8 +724,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         cartItems.innerHTML = '';
         
-        // Aktuellen Warenkorb holen (entweder aus CartModule oder state)
-        const currentCart = window.CartModule ? window.CartModule.getCart() : state.cart;
+        // Aktuellen Warenkorb aus CartModule holen
+        const currentCart = window.CartModule.getCart();
         // Warenkorb in state synchronisieren für andere Funktionen
         state.cart = currentCart;
         

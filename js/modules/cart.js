@@ -213,25 +213,3 @@ export const CartModule = {
 
 // Stelle das Modul global zur Verfügung für bestehenden Code
 window.CartModule = CartModule; 
-
-// Initialisiere das Modul automatisch
-function initCartModule() {
-    // Überprüfung, ob alle notwendigen DOM-Elemente vorhanden sind
-    if (document.getElementById('cart-icon')) {
-        console.log('CartModule wird initialisiert...');
-        CartModule.init();
-        console.log('CartModule erfolgreich initialisiert');
-    } else {
-        console.warn('Warenkorb-Elemente nicht gefunden, verzögere Initialisierung...');
-        // Verzögern und erneut versuchen
-        setTimeout(initCartModule, 100);
-    }
-}
-
-// Führe die Initialisierung aus, wenn das DOM geladen ist
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCartModule);
-} else {
-    // DOM ist bereits geladen
-    initCartModule();
-} 
