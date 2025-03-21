@@ -147,7 +147,91 @@
 
     <!-- Checkout Modal -->
     <div id="checkout-modal" class="modal">
-        <!-- Modal-Inhalt wird dynamisch eingefügt -->
+        <div class="modal-content checkout-content">
+            <span class="close-modal">&times;</span>
+            <h2>Bestellung abschließen</h2>
+            <form id="checkout-form">
+                <div class="form-section">
+                    <h3>Persönliche Daten</h3>
+                    <div class="form-group">
+                        <label for="checkout-firstname">Vorname*</label>
+                        <input type="text" id="checkout-firstname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-lastname">Nachname*</label>
+                        <input type="text" id="checkout-lastname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-email">E-Mail*</label>
+                        <input type="email" id="checkout-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-phone">Telefon</label>
+                        <input type="tel" id="checkout-phone">
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Lieferadresse</h3>
+                    <div class="form-group">
+                        <label for="checkout-street">Straße*</label>
+                        <input type="text" id="checkout-street" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-house-number">Hausnummer*</label>
+                        <input type="text" id="checkout-house-number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-zip">PLZ*</label>
+                        <input type="text" id="checkout-zip" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-city">Ort*</label>
+                        <input type="text" id="checkout-city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-country">Land*</label>
+                        <select id="checkout-country" required>
+                            <option value="DE">Deutschland</option>
+                            <option value="AT">Österreich</option>
+                            <option value="CH">Schweiz</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>Zahlungsmethode*</h3>
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <input type="radio" id="payment-paypal" name="payment-method" value="paypal" required>
+                            <label for="payment-paypal">
+                                <i class="fab fa-paypal"></i> PayPal
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="payment-credit-card" name="payment-method" value="credit-card" required>
+                            <label for="payment-credit-card">
+                                <i class="far fa-credit-card"></i> Kreditkarte
+                            </label>
+                        </div>
+                    </div>
+                    <!-- PayPal Button Container - wird für interne Verarbeitung verwendet, aber nicht angezeigt -->
+                    <div id="paypal-button-container" style="display: none;"></div>
+                </div>
+                <div class="checkout-summary">
+                    <h3>Bestellübersicht</h3>
+                    <div id="checkout-items">
+                        <!-- Bestellübersicht wird hier eingefügt -->
+                    </div>
+                    <div class="checkout-total">
+                        <p>Gesamtsumme: <span id="checkout-total">0,00 €</span></p>
+                    </div>
+                </div>
+                <div class="form-group terms-checkbox">
+                    <input type="checkbox" id="terms-checkbox" required>
+                    <label for="terms-checkbox">Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a>, <a href="datenschutz.html" target="_blank">Datenschutzbestimmungen</a> und <a href="widerrufsrecht.html" target="_blank">Widerrufsbelehrung</a>*</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Jetzt kaufen</button>
+            </form>
+        </div>
     </div>
 
     <!-- Order Confirmation Modal -->
