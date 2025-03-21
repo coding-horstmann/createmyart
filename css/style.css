@@ -1886,4 +1886,11 @@ input:invalid {
     .regulation-info p {
         font-size: 13px;
     }
+}
+
+/* Checkout MwSt Text */
+.checkout-total small {
+    font-size: 80%;
+    font-weight: normal;
+    color: #777;
 } 
