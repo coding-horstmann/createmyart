@@ -11,6 +11,9 @@ Ein responsiver Online-Shop für KI-generierte Poster, entwickelt mit HTML, CSS 
 - Responsive Design für alle Geräte
 - Lokale Speicherung von Generierungslimit und Warenkorb
 
+## Updates
+- 2024-03-21: Zur Kasse Button auf rechtlichen Seiten funktionsfähig gemacht
+
 ## Projektstruktur
 
 ```
