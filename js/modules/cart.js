@@ -49,37 +49,42 @@ export const CartModule = {
             console.warn('Element #cart-sidebar-backdrop nicht gefunden');
         }
         
-        // Checkout-Button Event
-        const checkoutBtn = document.getElementById('checkout-btn');
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', () => {
-                this.hideCartSidebar();
-                
-                // Prüfen, ob der Warenkorb leer ist
-                if (this.cart.length === 0) {
-                    if (window.UIModule) {
-                        window.UIModule.showCustomAlert('Hinweis', 'Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
-                    } else {
-                        alert('Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
+        // Checkout-Button Events - sowohl für den Button im Warenkorb als auch für alle anderen "Zur Kasse"-Buttons
+        // Alle "Zur Kasse"-Buttons finden, einschließlich des Buttons im Warenkorb
+        const checkoutBtns = document.querySelectorAll('#checkout-btn, .checkout-btn');
+        if (checkoutBtns && checkoutBtns.length > 0) {
+            checkoutBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Wenn der Button im Warenkorb ist, den Warenkorb schließen
+                    if (btn.id === 'checkout-btn') {
+                        this.hideCartSidebar();
                     }
-                    return;
-                }
-                
-                // Checkout-Modal anzeigen
-                // Diese Funktion ist in checkout.js definiert
-                if (window.CheckoutModule) {
-                    window.CheckoutModule.showCheckoutModal(this.cart);
-                } else {
-                    console.error('CheckoutModule nicht gefunden. Wurde checkout.js geladen?');
-                    if (window.UIModule) {
-                        window.UIModule.showCustomAlert('Fehler', 'Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
-                    } else {
-                        alert('Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
+                    
+                    // Prüfen, ob der Warenkorb leer ist
+                    if (this.cart.length === 0) {
+                        if (window.UIModule) {
+                            window.UIModule.showCustomAlert('Hinweis', 'Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
+                        } else {
+                            alert('Dein Warenkorb ist leer. Bitte füge zuerst ein Produkt hinzu.');
+                        }
+                        return;
                     }
-                }
+                    
+                    // Checkout-Modal anzeigen
+                    if (window.CheckoutModule) {
+                        window.CheckoutModule.showCheckoutModal(this.cart);
+                    } else {
+                        console.error('CheckoutModule nicht gefunden. Wurde checkout.js geladen?');
+                        if (window.UIModule) {
+                            window.UIModule.showCustomAlert('Fehler', 'Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
+                        } else {
+                            alert('Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.');
+                        }
+                    }
+                });
             });
         } else {
-            console.warn('Element #checkout-btn nicht gefunden');
+            console.warn('Keine "Zur Kasse"-Buttons gefunden');
         }
     },
     

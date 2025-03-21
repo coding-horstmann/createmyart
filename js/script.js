@@ -143,6 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.ValidationModule.init();
             }
             
+            // Cart Module initialisieren
+            if (window.CartModule && window.CartModule.init) {
+                window.CartModule.init();
+            }
+            
             // State Cart initialisieren
             state.cart = window.CartModule ? window.CartModule.getCart() : [];
             
