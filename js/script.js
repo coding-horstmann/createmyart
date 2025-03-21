@@ -326,16 +326,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function setupFAQAccordion() {
-        const faqItems = document.querySelectorAll('.faq-item');
-        if (faqItems && faqItems.length) {
+        try {
+            // FAQ-Items
+            const faqItems = document.querySelectorAll('.faq-item');
+            
             faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                if (question) {
-                    question.addEventListener('click', () => {
-                        item.classList.toggle('active');
-                    });
-                }
+                const questionElement = item.querySelector('.faq-question');
+                
+                questionElement.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
             });
+            
+            // Produktsicherungsverordnung
+            const productSafetyRegulation = document.querySelector('.product-safety-regulation');
+            if (productSafetyRegulation) {
+                const toggleElement = productSafetyRegulation.querySelector('.regulation-toggle');
+                
+                toggleElement.addEventListener('click', () => {
+                    productSafetyRegulation.classList.toggle('active');
+                });
+            }
+        } catch (error) {
+            console.error('Fehler beim Einrichten des FAQ-Akkordeons:', error);
         }
     }
     

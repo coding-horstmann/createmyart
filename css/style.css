@@ -1802,4 +1802,88 @@ input:invalid {
 .shipping-info i {
     margin-right: 6px;
     font-size: 1em;
+}
+
+/* Produktsicherungsverordnung */
+.product-safety-container {
+    padding: 15px 0 0;
+    background-color: var(--light-color);
+}
+
+.product-safety-regulation {
+    margin: 0 auto 15px;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    max-width: 500px;
+    background-color: #f8f9fa;
+}
+
+.regulation-toggle {
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--gray-color);
+    justify-content: space-between;
+}
+
+.regulation-toggle i.fa-info-circle {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+.regulation-toggle span {
+    flex: 1;
+}
+
+.regulation-toggle .toggle-icon {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.regulation-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.product-safety-regulation.active .regulation-content {
+    max-height: 300px;
+    padding-bottom: 10px;
+}
+
+.product-safety-regulation.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.regulation-info {
+    padding: 0 15px 0;
+}
+
+.regulation-info h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.regulation-info p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+@media (max-width: 576px) {
+    .regulation-toggle {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .regulation-info h3 {
+        font-size: 15px;
+    }
+    
+    .regulation-info p {
+        font-size: 13px;
+    }
 } 
