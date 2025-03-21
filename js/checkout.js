@@ -352,7 +352,6 @@ class Checkout {
     const zipField = document.getElementById('checkout-zip');
     const cityField = document.getElementById('checkout-city');
     const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
-    const termsCheckbox = document.getElementById('terms-checkbox');
     
     // Protokolliere die Werte der Felder
     console.log("Formularwerte:", {
@@ -363,8 +362,7 @@ class Checkout {
       houseNumber: houseNumberField ? houseNumberField.value : 'nicht gefunden',
       zip: zipField ? zipField.value : 'nicht gefunden',
       city: cityField ? cityField.value : 'nicht gefunden',
-      paymentChecked: paymentMethod ? paymentMethod.value : 'keine ausgewählt',
-      termsChecked: termsCheckbox ? termsCheckbox.checked : 'nicht gefunden'
+      paymentChecked: paymentMethod ? paymentMethod.value : 'keine ausgewählt'
     });
     
     // Vorname validieren
@@ -490,17 +488,6 @@ class Checkout {
     } else {
       // Sicherstellen, dass die Zahlungsmethode im this.payment-Objekt gesetzt ist
       this.updatePaymentMethod({ target: paymentMethod });
-    }
-    
-    // Prüfen, ob AGB akzeptiert wurden
-    if (!termsCheckbox || !termsCheckbox.checked) {
-      console.log("Fehlendes Pflichtfeld: AGB-Akzeptanz");
-      missingFields.push('AGB-Zustimmung');
-      if (termsCheckbox && termsCheckbox.parentNode) {
-        missingElements.push(termsCheckbox.parentNode);
-        termsCheckbox.parentNode.classList.add('field-error');
-        hasErrors = true;
-      }
     }
     
     // Prüfen, ob Warenkorb Artikel enthält

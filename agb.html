@@ -182,15 +182,17 @@
                         <label for="checkout-city">Ort*</label>
                         <input type="text" id="checkout-city" required>
                     </div>
-                    <div class="form-group">
-                        <label for="checkout-country">Land*</label>
-                        <select id="checkout-country" required>
-                            <option value="DE">Deutschland</option>
-                            <option value="AT">Österreich</option>
-                            <option value="CH">Schweiz</option>
-                        </select>
+                    <input type="hidden" id="checkout-country" value="DE">
+                    <div class="form-group country-display">
+                        <label>Land</label>
+                        <p>Deutschland</p>
                     </div>
                 </div>
+                
+                <div class="shipping-info">
+                    <p><i class="fas fa-truck"></i> <strong>Kostenloser Versand - Zustellung innerhalb von 5 Werktagen</strong></p>
+                </div>
+                
                 <div class="form-section">
                     <h3>Zahlungsmethode*</h3>
                     <div class="payment-options">
@@ -219,9 +221,8 @@
                         <p>Gesamtsumme: <span id="checkout-total">0,00 €</span></p>
                     </div>
                 </div>
-                <div class="form-group terms-checkbox">
-                    <input type="checkbox" id="terms-checkbox" required>
-                    <label for="terms-checkbox">Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a>, <a href="datenschutz.html" target="_blank">Datenschutzbestimmungen</a> und <a href="widerrufsrecht.html" target="_blank">Widerrufsbelehrung</a>*</label>
+                <div class="form-group terms-info">
+                    <p>Mit deiner Bestellung erklärst du dich mit unseren <a href="datenschutz.html" target="_blank">Datenschutzbestimmungen</a>, <a href="agb.html" target="_blank">AGB</a> und der <a href="widerrufsrecht.html" target="_blank">Widerrufsbelehrung</a> einverstanden.</p>
                 </div>
                 <button type="submit" class="btn btn-primary">Jetzt kaufen</button>
             </form>
