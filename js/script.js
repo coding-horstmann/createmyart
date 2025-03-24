@@ -401,7 +401,16 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (apiError) {
                 console.error('Primäre Bildgenerierung fehlgeschlagen:', apiError);
                 console.warn('Versuche Fallback-Generierung...');
-                result = await RunwareAPI.generateImageFallback(prompt);
+                try {
+                    result = await RunwareAPI.generateImageFallback(prompt);
+                } catch (fallbackError) {
+                    console.error('Fallback-Generierung fehlgeschlagen:', fallbackError);
+                    if (prompt.length < 3) {
+                        throw new Error('Gib mehr als 2 Buchstaben ein.');
+                    } else {
+                        throw fallbackError;
+                    }
+                }
             }
             
             if (!result) {

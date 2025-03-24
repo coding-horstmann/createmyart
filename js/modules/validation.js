@@ -246,6 +246,11 @@ export const ValidationModule = {
         if (!prompt || prompt.trim().length < minLength) {
             result.valid = false;
             result.errors.push(`Der Text muss mindestens ${minLength} Zeichen lang sein.`);
+            
+            // Zeige benutzerdefinierte Fehlermeldung bei zu kurzem Prompt
+            const customAlert = window.showCustomAlert || console.error;
+            customAlert("Gib mehr als 2 Buchstaben ein.");
+            return false;
         }
         
         if (prompt && prompt.length > maxLength) {
