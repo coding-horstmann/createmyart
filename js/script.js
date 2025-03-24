@@ -367,7 +367,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Prompt validieren
-        if (!ValidationModule.validatePrompt(prompt)) {
+        const validationResult = ValidationModule.validatePrompt(prompt);
+        if (!validationResult.valid) {
+            showCustomAlert(validationResult.errors[0]);
             return;
         }
         
