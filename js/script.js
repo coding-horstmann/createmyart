@@ -159,6 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
             setupFAQAccordion();
             updateGenerationsCounter();
             
+            // Limit-Modal überprüfen und ggf. schließen
+            checkAndCloseLimitModal();
+            
             // Scroll-Funktionen einrichten
             handleHashInUrl();
             setupSmoothScrolling();
@@ -1198,12 +1201,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function setGenerationsLeft(count) {
         localStorage.setItem('generationsLeft', count);
+        // Update state after changing localStorage
+        state.generationsLeft = count;
     }
     
     function updateGenerationsCounter() {
+        // Hole immer den aktuellen Wert direkt aus localStorage
+        const generationsLeft = getGenerationsLeft();
+        // Aktualisiere auch den State
+        state.generationsLeft = generationsLeft;
+        
         const remainingGenerations = document.getElementById('remaining-generations');
         if (remainingGenerations) {
-            remainingGenerations.textContent = state.generationsLeft;
+            remainingGenerations.textContent = generationsLeft;
         }
     }
     
@@ -1421,6 +1431,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    // Funktion zur Überprüfung und ggf. Schließung des Limit-erreicht-Modals
+    function checkAndCloseLimitModal() {
+        // Limit-erreicht-Modal im DOM suchen
+        const limitModal = document.querySelector('.modal.active[aria-label="Limit erreicht"]') || 
+                         document.querySelector('.modal.active.limit-reached');
+        
+        // Wenn ein solches Modal existiert, prüfen wir, ob das Limit tatsächlich erreicht ist
+        if (limitModal) {
+            const generationsLeft = getGenerationsLeft();
+            
+            // Wenn noch Generierungen übrig sind, Modal schließen
+            if (generationsLeft > 0) {
+                console.log('Limit-Modal wird geschlossen, da noch Generierungen übrig sind:', generationsLeft);
+                limitModal.style.display = 'none';
+                limitModal.classList.remove('active');
+                
+                // Falls ein Hintergrund-Overlay vorhanden ist, auch dieses entfernen
+                const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+                modalBackdrops.forEach(backdrop => {
+                    backdrop.style.display = 'none';
+                    backdrop.classList.remove('active');
+                });
+            }
+        }
+    }
 });
 
 // Globale Funktion für das Umschalten des Mobile-Menüs
@@ -1451,5 +1487,14 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenuBtn.addEventListener('click', function() {
             window.toggleMobileMenu();
         });
+    }
+    
+    // Limit-Modal überprüfen und ggf. schließen
+    if (typeof checkAndCloseLimitModal === 'function') {
+        // Direkt beim Laden prüfen
+        checkAndCloseLimitModal();
+        
+        // Und nach kurzer Verzögerung nochmal, falls Modal später geladen wird
+        setTimeout(checkAndCloseLimitModal, 1000);
     }
 }); 
