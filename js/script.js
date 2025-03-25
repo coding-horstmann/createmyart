@@ -392,14 +392,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Bildgenerierung starten
         try {
-            // Überprüfen, ob der Prompt zu komplex ist
-            const isComplexPrompt = prompt.length > 200 || 
-                                  prompt.split(/\s+/).length > 50 ||
-                                  /\b(hyperrealistisch|ultradetailliert|super high detail|extremely complex|intricate details)\b/i.test(prompt);
+            // Überprüfen, ob der Prompt zu komplex ist - mit weniger empfindlichen Kriterien
+            const isComplexPrompt = prompt.length > 300 || 
+                                  prompt.split(/\s+/).length > 80 ||
+                                  /\b(hyperrealistisch|ultradetailliert|super high detail|extremely complex|intricate details|extreme detail)\b/i.test(prompt);
             
             if (isComplexPrompt) {
                 console.warn('Der Prompt könnte zu komplex sein und zu Timeouts führen');
-                showCustomAlert('Dein Prompt ist relativ komplex. Falls es zu Timeouts kommt, versuche bitte einen kürzeren, einfacheren Prompt.', 'Hinweis');
+                // Warnung nur bei wirklich komplexen Prompts anzeigen
+                showCustomAlert('Dein Prompt ist sehr komplex. Falls es zu Timeouts kommt, versuche bitte einen kürzeren, einfacheren Prompt.', 'Hinweis');
             }
             
             // Generieren mit 45 Sekunden Timeout (erhöht von 30 auf 45 Sekunden)
