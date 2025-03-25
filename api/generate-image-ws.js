@@ -52,7 +52,7 @@ async function handler(req, res) {
           positivePrompt: prompt,
           width: 512,
           height: 704,
-          model: "rundiffusion:120@100",
+          model: "runware:101@1",
           numberResults: 1
         }
       ])

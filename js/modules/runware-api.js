@@ -128,7 +128,7 @@ export const RunwareAPI = {
                     positivePrompt: prompt,
                     width: 512,
                     height: 704,
-                    model: "rundiffusion:120@100", // Rundiffusion-Modell
+                    model: "runware:101@1", // Runware-Modell
                     numberResults: 1
                 }
             ];
@@ -255,7 +255,7 @@ export const RunwareAPI = {
                         positivePrompt: prompt,
                         width: 512,
                         height: 704,
-                        model: "rundiffusion:120@100",
+                        model: "runware:101@1",
                         numberResults: 1
                     }
                 ]));
