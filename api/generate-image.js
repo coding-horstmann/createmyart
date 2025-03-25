@@ -98,7 +98,7 @@ async function handler(req, res) {
           taskType: "imageInference",
           taskUUID: imageData.taskUUID || taskUUID,
           url: imageData.imageURL, // Runware gibt imageURL zurück
-          model: "runware-model",
+          model: "rundiffusion:130@100",
           metadata: {
             prompt: prompt
           }

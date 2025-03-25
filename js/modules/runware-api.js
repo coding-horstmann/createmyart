@@ -162,7 +162,7 @@ export const RunwareAPI = {
                     taskType: "imageInference",
                     taskUUID: imageData.taskUUID || taskUUID,
                     url: imageData.imageURL, // Runware gibt imageURL zurück
-                    model: imageData.model || "runware-model",
+                    model: imageData.model || "rundiffusion:130@100",
                     metadata: {
                         prompt: prompt
                     }
@@ -217,7 +217,7 @@ export const RunwareAPI = {
                                 taskType: "imageInference",
                                 taskUUID: imageData.taskUUID || taskUUID,
                                 url: imageData.imageURL,
-                                model: "runware-model",
+                                model: "rundiffusion:130@100",
                                 metadata: {
                                     prompt: prompt
                                 }
@@ -262,7 +262,25 @@ export const RunwareAPI = {
             });
         } catch (error) {
             console.error('Fehler bei WebSocket-Bildgenerierung:', error);
-            return this.generateImageFallback(prompt);
+            // Verwende die direkte Bildgenerierung als Fallback
+            try {
+                return await this.generateImage(prompt);
+            } catch (fallbackError) {
+                console.error('Auch Fallback-Bildgenerierung fehlgeschlagen:', fallbackError);
+                throw error; // Werfe den ursprünglichen Fehler
+            }
+        }
+    },
+    
+    // Fallback-Methode für Bildgenerierung bei Problemen mit WebSocket
+    async generateImageFallback(prompt) {
+        console.log('Verwende Fallback-Methode für Bildgenerierung...');
+        try {
+            // Einfacher Fallback: Verwende die normale HTTP-API
+            return await this.generateImage(prompt);
+        } catch (error) {
+            console.error('Fehler bei Fallback-Bildgenerierung:', error);
+            throw error;
         }
     },
     
