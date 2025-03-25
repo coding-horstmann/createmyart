@@ -53,21 +53,54 @@ export const RunwareAPI = {
                     'Cache-Control': 'no-cache'
                 },
                 body: JSON.stringify({ prompt })
+                // Fetch unterstützt keine direkte timeout-Option
             });
             
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Fehler bei der Bildgenerierung');
+                // Bei HTTP-Statuscode 504 (Gateway Timeout) spezifische Fehlermeldung liefern
+                if (response.status === 504) {
+                    throw new Error('Die Bildgenerierung hat zu lange gedauert. Bitte versuche es mit einem kürzeren Prompt oder versuche es später erneut.');
+                }
+                
+                // Bei zu vielen Anfragen (429)
+                if (response.status === 429) {
+                    throw new Error('Bitte warte einen Moment, bevor du denselben Prompt erneut verwendest.');
+                }
+                
+                // Für andere Fehler versuchen wir, die JSON-Antwort zu lesen
+                const responseText = await response.text();
+                let errorMessage;
+                
+                try {
+                    // Versuche, die Antwort als JSON zu parsen
+                    const errorData = JSON.parse(responseText);
+                    errorMessage = errorData.message || errorData.error || `Fehler bei der Bildgenerierung: ${response.status} ${response.statusText}`;
+                } catch (jsonError) {
+                    // Falls die Antwort kein gültiges JSON ist
+                    console.error('Keine gültige JSON-Antwort vom Server:', responseText.substring(0, 150));
+                    errorMessage = `Fehler bei der Bildgenerierung: ${response.status} ${response.statusText}`;
+                }
+                
+                throw new Error(errorMessage);
             }
             
-            const data = await response.json();
+            // Vorsichtig die JSON-Antwort parsen
+            let data;
+            const responseText = await response.text();
             
-            if (data.data) {
+            try {
+                data = JSON.parse(responseText);
+            } catch (jsonError) {
+                console.error('Fehler beim Parsen der API-Antwort als JSON:', responseText.substring(0, 150));
+                throw new Error('Die API hat eine ungültige Antwort zurückgegeben. Bitte versuche es mit einem kürzeren Prompt.');
+            }
+            
+            if (data.data && data.data.length > 0) {
                 return data.data[0];
             } else if (data.errors) {
-                throw new Error(data.errors[0].message);
+                throw new Error(data.errors[0].message || 'Fehler bei der Bildgenerierung');
             } else {
-                throw new Error("Ungültige Antwort von der API");
+                throw new Error("Ungültige Antwort von der API. Bitte versuche es erneut.");
             }
         } catch (error) {
             console.error('Fehler bei der Bildgenerierung:', error);

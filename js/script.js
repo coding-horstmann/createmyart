@@ -392,24 +392,71 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Bildgenerierung starten
         try {
-            // Runware API verwenden
+            // Überprüfen, ob der Prompt zu komplex ist
+            const isComplexPrompt = prompt.length > 200 || 
+                                  prompt.split(/\s+/).length > 50 ||
+                                  /\b(hyperrealistisch|ultradetailliert|super high detail|extremely complex|intricate details)\b/i.test(prompt);
+            
+            if (isComplexPrompt) {
+                console.warn('Der Prompt könnte zu komplex sein und zu Timeouts führen');
+                showCustomAlert('Dein Prompt ist relativ komplex. Falls es zu Timeouts kommt, versuche bitte einen kürzeren, einfacheren Prompt.', 'Hinweis');
+            }
+            
+            // Generieren mit 45 Sekunden Timeout (erhöht von 30 auf 45 Sekunden)
+            const generatePromise = RunwareAPI.generateImage(prompt);
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Die Bildgenerierung hat zu lange gedauert. Bitte versuche einen kürzeren Prompt.')), 45000);
+            });
+            
+            // Race zwischen der regulären Generierung und dem Timeout
             let result;
             try {
-                console.log('Starte Bildgenerierung mit Prompt:', prompt);
-                result = await RunwareAPI.generateImage(prompt);
+                result = await Promise.race([generatePromise, timeoutPromise]);
                 console.log('Runware API Antwort erhalten:', result);
             } catch (apiError) {
                 console.error('Primäre Bildgenerierung fehlgeschlagen:', apiError);
-                console.warn('Versuche Fallback-Generierung...');
-                try {
-                    result = await RunwareAPI.generateImageFallback(prompt);
-                } catch (fallbackError) {
-                    console.error('Fallback-Generierung fehlgeschlagen:', fallbackError);
-                    if (prompt.length < 3) {
-                        throw new Error('Gib mehr als 2 Buchstaben ein.');
-                    } else {
-                        throw fallbackError;
+                
+                // Vereinfachte Prompt-Version als Fallback probieren, wenn der Fehler ein Timeout ist
+                if (apiError.message && (apiError.message.includes('zu lange gedauert') || 
+                                      apiError.message.includes('timeout') || 
+                                      apiError.message.includes('Zeitüberschreitung') ||
+                                      apiError.name === 'SyntaxError')) {
+                    console.log('Versuche vereinfachten Prompt als Fallback...');
+                    
+                    try {
+                        // Vereinfachte Version des Prompts erstellen (nur erster Satz, max 100 Zeichen)
+                        const simplifiedPrompt = prompt.split('.')[0].trim().substring(0, 100);
+                        
+                        if (simplifiedPrompt.length < 10) {
+                            // Wenn der Prompt zu kurz ist, einfach den Fehler weitergeben
+                            throw apiError;
+                        }
+                        
+                        // Warnung anzeigen
+                        showCustomAlert('Der ursprüngliche Prompt war zu komplex. Wir versuchen eine vereinfachte Version zu generieren.', 'Hinweis');
+                        
+                        // Erneuter Versuch mit vereinfachtem Prompt und längerem Timeout
+                        result = await RunwareAPI.generateImage(simplifiedPrompt);
+                        console.log('Fallback-Generierung erfolgreich:', result);
+                        
+                        // Ursprünglichen Prompt für die Anzeige behalten, aber im Metadaten-Feld vermerken
+                        if (result && !result.metadata) {
+                            result.metadata = {};
+                        }
+                        if (result && result.metadata) {
+                            result.metadata.originalPrompt = prompt;
+                            result.metadata.simplifiedPrompt = simplifiedPrompt;
+                        }
+                    } catch (fallbackError) {
+                        console.error('Fallback-Generierung fehlgeschlagen:', fallbackError);
+                        // Bessere Fehlermeldung zusammenstellen
+                        const errorMessage = fallbackError.message || apiError.message || 'Unbekannter Fehler';
+                        throw new Error(`Die Bildgenerierung ist fehlgeschlagen. ${errorMessage}`);
                     }
+                } else if (apiError.message && apiError.message.includes('Too many requests')) {
+                    throw new Error('Bitte warte einen Moment, bevor du denselben Prompt erneut verwendest.');
+                } else {
+                    throw apiError;
                 }
             }
             
