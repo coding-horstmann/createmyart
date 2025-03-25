@@ -473,13 +473,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Keine URL in den Bilddaten erhalten');
             }
             
+            // NSFW-Inhalt prüfen und ggf. blockieren
+            if (result.NSFWContent === true) {
+                console.log('NSFW-Inhalt erkannt und blockiert');
+                
+                // Lade-Anzeige ausblenden
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+                
+                // Benachrichtigung anzeigen
+                showCustomAlert('Das generierte Bild enthält nicht jugendfreie Inhalte und wurde blockiert. Bitte versuche einen anderen Prompt.', 'Inhalt blockiert');
+                
+                // Generierungszähler trotzdem aktualisieren, da eine Generierung stattgefunden hat
+                setGenerationsLeft(generationsLeft - 1);
+                updateGenerationsCounter();
+                return;
+            }
+            
             // Bild anzeigen
             const imageData = {
                 id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
                 url: result.url,
                 prompt: prompt,
                 timestamp: Date.now(),
-                metadata: result.metadata || { prompt }
+                metadata: result.metadata || { prompt },
+                NSFWContent: result.NSFWContent
             };
             
             console.log('Bildanzeige vorbereitet:', imageData);
@@ -535,12 +552,17 @@ document.addEventListener('DOMContentLoaded', function() {
             displayPrompt += '...';
         }
         
+        // NSFW-Status prüfen
+        const isNSFW = image.NSFWContent === true;
+        const nsfwBadge = isNSFW ? '<span class="nsfw-badge">NSFW</span>' : '';
+        
         const resultItem = document.createElement('div');
         resultItem.className = 'result-item';
         resultItem.innerHTML = `
             <div class="result-image" data-id="${image.id}">
                 <img src="${image.url}" alt="Generiertes Poster" onload="this.parentElement.classList.add('loaded')">
                 <div class="image-loading">Bild wird geladen...</div>
+                ${nsfwBadge}
                 <button class="delete-image-btn" data-id="${image.id}" title="Bild löschen">
                     <i class="fas fa-trash-alt"></i>
                 </button>

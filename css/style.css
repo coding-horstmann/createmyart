@@ -1893,4 +1893,18 @@ input:invalid {
     font-size: 80%;
     font-weight: normal;
     color: #777;
+}
+
+/* NSFW-Badge für Bilder */
+.nsfw-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 2;
 } 

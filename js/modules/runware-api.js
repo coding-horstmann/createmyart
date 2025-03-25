@@ -129,7 +129,8 @@ export const RunwareAPI = {
                     width: 512,
                     height: 704,
                     model: "rundiffusion:130@100", // Rundiffusion-Modell
-                    numberResults: 1
+                    numberResults: 1,
+                    checkNSFW: true
                 }
             ];
             
@@ -157,6 +158,12 @@ export const RunwareAPI = {
                 const imageData = data.data[0];
                 console.log('Bild erfolgreich generiert:', imageData);
                 
+                // NSFW-Inhalt prüfen
+                if (imageData.NSFWContent === true) {
+                    console.log('NSFW-Inhalt erkannt und blockiert');
+                    throw new Error('Das generierte Bild enthält nicht jugendfreie Inhalte und wurde blockiert.');
+                }
+                
                 // Korrektes Format für unsere Anwendung
                 return {
                     taskType: "imageInference",
@@ -165,7 +172,8 @@ export const RunwareAPI = {
                     model: imageData.model || "rundiffusion:130@100",
                     metadata: {
                         prompt: prompt
-                    }
+                    },
+                    NSFWContent: imageData.NSFWContent // NSFW-Information weitergeben
                 };
             } else if (data.errors && data.errors.length > 0) {
                 console.error('Runware API Fehler:', data.errors);
@@ -212,6 +220,13 @@ export const RunwareAPI = {
                             const imageData = data.data[0];
                             clearTimeout(timeout);
                             ws.close();
+                            
+                            // NSFW-Inhalt prüfen
+                            if (imageData.NSFWContent === true) {
+                                console.log('NSFW-Inhalt erkannt und blockiert');
+                                reject(new Error('Das generierte Bild enthält nicht jugendfreie Inhalte und wurde blockiert.'));
+                                return;
+                            }
                             
                             resolve({
                                 taskType: "imageInference",

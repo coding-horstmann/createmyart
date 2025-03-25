@@ -59,7 +59,8 @@ async function handler(req, res) {
         width: 512,
         height: 704,
         model: "rundiffusion:130@100",
-        numberResults: 1
+        numberResults: 1,
+        checkNSFW: true
       }
     ];
 
@@ -92,6 +93,15 @@ async function handler(req, res) {
       // Finde den Image-Inference-Response (nicht das Auth-Objekt)
       const imageData = data.data.find(item => item.taskType === 'imageInference') || data.data[0];
       
+      // NSFW-Inhalt prüfen
+      if (imageData.NSFWContent === true) {
+        console.log('NSFW-Inhalt erkannt und blockiert');
+        return res.status(403).json({ 
+          error: 'Not Safe For Work (NSFW) Inhalt erkannt',
+          message: 'Das generierte Bild enthält nicht jugendfreie Inhalte und wurde blockiert.'
+        });
+      }
+      
       // Formate das Bild in das vom Frontend erwartete Format
       const formattedResponse = {
         data: [{
@@ -101,7 +111,8 @@ async function handler(req, res) {
           model: "rundiffusion:130@100",
           metadata: {
             prompt: prompt
-          }
+          },
+          NSFWContent: imageData.NSFWContent // NSFW-Information weitergeben
         }]
       };
       
