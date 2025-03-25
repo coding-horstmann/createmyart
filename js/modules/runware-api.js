@@ -127,8 +127,8 @@ export const RunwareAPI = {
                     taskUUID: taskUUID,
                     positivePrompt: prompt,
                     width: 512,
-                    height: 512,
-                    model: "civitai:102438@133677", // Standard Stable Diffusion-Modell
+                    height: 704,
+                    model: "rundiffusion:120@100", // Rundiffusion-Modell
                     numberResults: 1
                 }
             ];
@@ -254,8 +254,8 @@ export const RunwareAPI = {
                         taskUUID: taskUUID,
                         positivePrompt: prompt,
                         width: 512,
-                        height: 512,
-                        model: "civitai:102438@133677",
+                        height: 704,
+                        model: "rundiffusion:120@100",
                         numberResults: 1
                     }
                 ]));

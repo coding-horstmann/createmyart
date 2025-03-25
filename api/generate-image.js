@@ -57,8 +57,8 @@ async function handler(req, res) {
         taskUUID: taskUUID,
         positivePrompt: prompt,
         width: 512,
-        height: 512,
-        model: "civitai:102438@133677",
+        height: 704,
+        model: "rundiffusion:120@100",
         numberResults: 1
       }
     ];
