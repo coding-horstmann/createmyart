@@ -138,6 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.FirebaseAPI.initializeFirebase();
             }
             
+            // reCAPTCHA dynamisch laden
+            loadRecaptcha();
+            
             // Validation Module initialisieren
             if (window.ValidationModule && window.ValidationModule.init) {
                 window.ValidationModule.init();
@@ -1444,6 +1447,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     backdrop.classList.remove('active');
                 });
             }
+        }
+    }
+
+    /**
+     * Lädt das Google reCAPTCHA-Skript dynamisch
+     */
+    async function loadRecaptcha() {
+        try {
+            // Umgebungsvariablen laden
+            const envLoader = await import('./env-loader.js');
+            await envLoader.loadEnvironmentVariables();
+            
+            // reCAPTCHA-Schlüssel aus den Umgebungsvariablen laden
+            const recaptchaKey = envLoader.getEnv('GOOGLE_RECAPTCHA_KEY');
+            
+            if (!recaptchaKey) {
+                console.warn('Kein reCAPTCHA-Schlüssel in den Umgebungsvariablen gefunden.');
+                return;
+            }
+            
+            // reCAPTCHA-Skript dynamisch laden
+            const script = document.createElement('script');
+            script.src = `https://www.google.com/recaptcha/api.js?render=${recaptchaKey}`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+            
+            console.log('reCAPTCHA-Skript wurde dynamisch geladen.');
+        } catch (error) {
+            console.error('Fehler beim Laden von reCAPTCHA:', error);
         }
     }
 });

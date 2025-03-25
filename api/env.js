@@ -36,6 +36,9 @@ function handler(req, res) {
     
     // PayPal Client ID (nur die client ID ist für das Frontend nötig)
     PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID || '',
+    
+    // Google reCAPTCHA Schlüssel
+    GOOGLE_RECAPTCHA_KEY: process.env.GOOGLE_RECAPTCHA_KEY || '',
   };
 
   // Debugging-Info (nur für Entwicklung)
