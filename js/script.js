@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: window.CartModule ? window.CartModule.generateUniqueId() : `cart_${Date.now()}`,
             imageId: image.id, // Original-Bild-ID beibehalten
             url: image.url,
-            prompt: image.prompt,
+            prompt: "Personalisiertes Poster", // Fester Titel statt tatsächlichem Prompt
             size: selectedSize,
             price: price
         };
@@ -738,7 +738,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: window.CartModule.generateUniqueId(),
             imageId: image.id, // Original-Bild-ID beibehalten
             url: image.url,
-            prompt: image.prompt,
+            prompt: "Personalisiertes Poster", // Fester Titel statt tatsächlichem Prompt
             size: selectedSize,
             price: price
         };
@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <img src="${item.url}" alt="Bestelltes Poster">
                 </div>
                 <div class="cart-item-details">
-                    <p class="cart-item-prompt">${item.prompt}</p>
+                    <p class="cart-item-prompt">Personalisiertes Poster</p>
                     <p class="cart-item-size">${formatSize(item.size)}</p>
                     <p class="cart-item-price">${formattedPrice} €</p>
                 </div>
@@ -869,7 +869,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <img src="${item.url}" alt="Poster">
                 </div>
                 <div class="checkout-item-details">
-                    <p class="checkout-item-title">KI-generiertes Poster</p>
+                    <p class="checkout-item-title">Personalisiertes Poster</p>
                     <p class="checkout-item-size">Größe: ${formatSize(item.size)}</p>
                     <p class="checkout-item-price">Preis: ${formattedPrice} €</p>
                 </div>
