@@ -1595,8 +1595,11 @@ input:invalid {
     max-width: 100%;
     height: auto;
     border-radius: 10px;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     display: block;
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .inspiration-placeholder {
