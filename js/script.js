@@ -213,6 +213,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     displayGeneratedImage(image);
                 });
             }
+
+            // Initialisiere die Kopier-Buttons
+            setupPromptCopyButtons();
         } catch (error) {
             console.error('Fehler bei der Initialisierung:', error);
         }
@@ -1500,6 +1503,35 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Fehler beim Laden von reCAPTCHA:', error);
         }
+    }
+
+    // Kopieren der Inspiration-Prompts
+    function setupPromptCopyButtons() {
+        const copyButtons = document.querySelectorAll('.copy-prompt');
+        
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Finde den Prompt-Text im selben Inspiration-Item
+                const inspirationItem = this.closest('.inspiration-item');
+                const promptText = inspirationItem.querySelector('p').textContent;
+                const successElement = inspirationItem.querySelector('.copy-success');
+                
+                // Kopiere den Text in die Zwischenablage
+                navigator.clipboard.writeText(promptText)
+                    .then(() => {
+                        // Zeige Erfolgsanimation
+                        successElement.style.opacity = '1';
+                        
+                        // Blende Erfolgsmeldung nach 1,5 Sekunden aus
+                        setTimeout(() => {
+                            successElement.style.opacity = '0';
+                        }, 1500);
+                    })
+                    .catch(err => {
+                        console.error('Fehler beim Kopieren: ', err);
+                    });
+            });
+        });
     }
 });
 
