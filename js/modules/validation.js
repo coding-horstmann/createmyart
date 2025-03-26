@@ -6,6 +6,8 @@
 export const ValidationModule = {
     // Array für verbotene Begriffe
     forbiddenTerms: [],
+    // Array für unangemessene Begriffe
+    inappropriateTerms: [],
     
     /**
      * Lädt die Liste der verbotenen Begriffe
@@ -34,10 +36,37 @@ export const ValidationModule = {
     },
     
     /**
+     * Lädt die Liste der unangemessenen Begriffe
+     * @param {string} url - Die URL zur JSON-Datei mit unangemessenen Begriffen
+     * @returns {Promise} - Promise, das nach dem Laden aufgelöst wird
+     */
+    loadInappropriateTerms(url = '/js/modules/inappropriate-terms.json') {
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Fehler beim Laden der unangemessenen Begriffe');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (Array.isArray(data)) {
+                    this.inappropriateTerms = data.map(term => term.toLowerCase());
+                    console.log(`${this.inappropriateTerms.length} unangemessene Begriffe geladen`);
+                } else {
+                    console.error('Unangemessene Begriffe haben falsches Format');
+                }
+            })
+            .catch(error => {
+                console.error('Fehler beim Laden der unangemessenen Begriffe:', error);
+            });
+    },
+    
+    /**
      * Initialisiert das Validierungsmodul
      */
     init() {
         this.loadForbiddenTerms();
+        this.loadInappropriateTerms();
     },
     
     /**
@@ -229,6 +258,27 @@ export const ValidationModule = {
     },
     
     /**
+     * Prüft, ob ein Text unangemessene Begriffe enthält
+     * @param {string} text - Der zu prüfende Text
+     * @returns {object} - Ergebnis mit Status und gefundenen unangemessenen Begriffen
+     */
+    checkInappropriateTerms(text) {
+        if (!text || typeof text !== 'string') {
+            return { valid: true, inappropriateTerms: [] };
+        }
+        
+        const textLower = text.toLowerCase();
+        const foundTerms = this.inappropriateTerms.filter(term => 
+            textLower.includes(term.toLowerCase())
+        );
+        
+        return {
+            valid: foundTerms.length === 0,
+            inappropriateTerms: foundTerms
+        };
+    },
+    
+    /**
      * Validiert einen Prompt-Text (für Text-zu-Bild)
      * @param {string} prompt - Der zu validierende Prompt
      * @returns {object} - Validierungsergebnis mit Status und Fehlermeldungen
@@ -263,6 +313,13 @@ export const ValidationModule = {
         if (!forbiddenCheck.valid) {
             result.valid = false;
             result.errors.push('Dein Text enthält markenrechtlich problematische Begriffe.');
+        }
+        
+        // Prüfe auf unangemessene Begriffe
+        const inappropriateCheck = this.checkInappropriateTerms(prompt);
+        if (!inappropriateCheck.valid) {
+            result.valid = false;
+            result.errors.push('Dein Text enthält Begriffe, die gegen unsere Nutzungsvereinbarungen verstoßen.');
         }
         
         // Warnungen für potenziell problematische Inhalte
