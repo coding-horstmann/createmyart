@@ -530,14 +530,17 @@ p {
 
 .results-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 27px;
+    margin-top: 36px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Änderungen für die Ladezeit, damit Bilder und Ladeindikator gleichzeitig sichtbar sind */
 .create-section .create-content + .generation-status-wrapper + .results-container {
-    margin-top: 20px;
+    margin-top: 18px;
 }
 
 .result-item {
@@ -546,11 +549,12 @@ p {
     overflow: hidden;
     transition: var(--transition);
     box-shadow: var(--box-shadow);
+    font-size: 0.9em;
 }
 
 .result-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4.5px);
+    box-shadow: 0 9px 18px rgba(0, 0, 0, 0.1);
 }
 
 .result-image {
@@ -558,6 +562,7 @@ p {
     cursor: pointer;
     overflow: hidden;
     border-radius: var(--border-radius);
+    max-height: 360px;
 }
 
 .result-image img {
@@ -565,26 +570,28 @@ p {
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+    max-height: 360px;
 }
 
 .result-image:hover img {
-    transform: scale(1.05);
+    transform: scale(1.045);
 }
 
 .result-details {
-    padding: 20px;
+    padding: 18px;
 }
 
 .prompt-display {
-    margin-bottom: 15px;
+    margin-bottom: 13.5px;
     border-bottom: 1px solid var(--light-gray);
-    padding-bottom: 15px;
+    padding-bottom: 13.5px;
 }
 
 .prompt-display label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4.5px;
     font-weight: 500;
+    font-size: 0.9em;
 }
 
 .prompt-text-container {
@@ -592,14 +599,14 @@ p {
     align-items: center;
     background-color: var(--light-color);
     border-radius: var(--border-radius);
-    padding: 10px;
+    padding: 9px;
     border: 1px solid var(--light-gray);
 }
 
 .prompt-text {
     flex: 1;
     word-break: break-word;
-    font-size: 14px;
+    font-size: 12.6px;
     line-height: 1.4;
     color: var(--dark-gray);
     white-space: nowrap;
@@ -608,13 +615,13 @@ p {
 }
 
 .copy-prompt-btn {
-    margin-left: 10px;
+    margin-left: 9px;
     background-color: transparent;
     border: none;
     color: var(--dark-gray);
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 27px;
+    height: 27px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -628,32 +635,35 @@ p {
 }
 
 .size-selection {
-    margin-bottom: 15px;
+    margin-bottom: 13.5px;
 }
 
 .size-selection label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4.5px;
     font-weight: 500;
+    font-size: 0.9em;
 }
 
 .size-selection select {
     width: 100%;
-    padding: 10px;
+    padding: 9px;
     border: 1px solid var(--light-gray);
     border-radius: var(--border-radius);
     font-family: inherit;
+    font-size: 0.9em;
 }
 
 .result-actions {
     display: flex;
-    gap: 10px;
+    gap: 9px;
 }
 
 .result-actions button {
     width: 100%;
-    margin-top: 10px;
-    font-size: 12px;
+    margin-top: 9px;
+    font-size: 10.8px;
+    padding: 9px 18px;
 }
 
 /* Benefits Section */
