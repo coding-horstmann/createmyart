@@ -536,6 +536,7 @@ p {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    justify-items: center;
 }
 
 /* Änderungen für die Ladezeit, damit Bilder und Ladeindikator gleichzeitig sichtbar sind */
@@ -562,15 +563,17 @@ p {
     cursor: pointer;
     overflow: hidden;
     border-radius: var(--border-radius);
-    max-height: 360px;
+    aspect-ratio: 5/7;
+    width: 100%;
+    max-width: 270px;
+    margin: 0 auto;
 }
 
 .result-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.5s ease;
-    max-height: 360px;
 }
 
 .result-image:hover img {
