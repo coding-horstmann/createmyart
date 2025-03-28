@@ -564,7 +564,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resultItem.innerHTML = `
             <div class="result-image" data-id="${image.id}">
                 <img src="${image.url}" alt="Generiertes Poster" onload="this.parentElement.classList.add('loaded')">
-                <div class="image-loading">Bild wird geladen...</div>
                 ${nsfwBadge}
                 <button class="delete-image-btn" data-id="${image.id}" title="Bild löschen">
                     <i class="fas fa-trash-alt"></i>
