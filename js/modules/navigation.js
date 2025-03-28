@@ -177,6 +177,31 @@ export const NavigationModule = {
                 }
             });
         });
+        
+        // Zusätzlich für Links, die auf index.html#section verweisen, wenn wir auf der Index-Seite sind
+        const isIndexPage = window.location.pathname.endsWith('index.html') || 
+                          window.location.pathname.endsWith('/') || 
+                          window.location.pathname.split('/').pop() === '';
+        
+        if (isIndexPage) {
+            // Finde alle Links, die auf index.html# verweisen
+            const indexLinks = document.querySelectorAll('a[href^="index.html#"]');
+            
+            indexLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Verhindere Standard-Navigation
+                    e.preventDefault();
+                    
+                    // Hole das Ziel aus dem href-Attribut
+                    const targetId = link.getAttribute('href').split('#')[1];
+                    
+                    // Wenn das Ziel existiert und nicht leer ist
+                    if (targetId && targetId !== '') {
+                        this.scrollToElement(targetId);
+                    }
+                });
+            });
+        }
     },
     
     /**
