@@ -247,9 +247,18 @@ export const ValidationModule = {
         }
         
         const textLower = text.toLowerCase();
-        const foundTerms = this.forbiddenTerms.filter(term => 
-            textLower.includes(term.toLowerCase())
-        );
+        const words = textLower.split(/[\s,.;:!?()[\]{}'"«»„"]/); // Teilt den Text in Wörter auf
+        
+        // Suche nach vollständigen Wörtern
+        const foundTerms = this.forbiddenTerms.filter(term => {
+            const termWords = term.toLowerCase().split(/\s+/);
+            // Einzelnes Wort
+            if (termWords.length === 1) {
+                return words.includes(term.toLowerCase());
+            }
+            // Phrase mit mehreren Wörtern
+            return textLower.includes(term.toLowerCase());
+        });
         
         return {
             valid: foundTerms.length === 0,
@@ -268,9 +277,18 @@ export const ValidationModule = {
         }
         
         const textLower = text.toLowerCase();
-        const foundTerms = this.inappropriateTerms.filter(term => 
-            textLower.includes(term.toLowerCase())
-        );
+        const words = textLower.split(/[\s,.;:!?()[\]{}'"«»„"]/); // Teilt den Text in Wörter auf
+        
+        // Suche nach vollständigen Wörtern
+        const foundTerms = this.inappropriateTerms.filter(term => {
+            const termWords = term.toLowerCase().split(/\s+/);
+            // Einzelnes Wort
+            if (termWords.length === 1) {
+                return words.includes(term.toLowerCase());
+            }
+            // Phrase mit mehreren Wörtern
+            return textLower.includes(term.toLowerCase());
+        });
         
         return {
             valid: foundTerms.length === 0,
